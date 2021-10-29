@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Main from './main';
 import PageName from './page-name';
 import wrapper from './wrapper';
+import Entry from '../pages/entry';
+import KakaoSignin from '../pages/kakao-sign-in';
+import { useAuth } from '../hooks/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const wrappedComps = {
+  Entry: wrapper.commonWrap(Entry),
+  KakaoSignIn: wrapper.commonWrap(KakaoSignin, '#fff'),
   Main: wrapper.commonWrapNoSafeAreaView({
     Component: Main,
     isStatusBarDark: true,
@@ -17,6 +23,23 @@ export default () => {
   const N = NonModalPagesNav.Navigator;
   const S = NonModalPagesNav.Screen;
 
+  const auth = useAuth();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (auth.status === 'authed') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: PageName.Main }],
+      });
+    } else if (auth.status === 'not-authed') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: PageName.Entry }],
+      });
+    }
+  }, [auth.status]);
+
   return (
     <N
       screenOptions={{
@@ -24,6 +47,9 @@ export default () => {
       }}
     >
       <S name={PageName.Main} component={wrappedComps.Main} />
+
+      <S name={PageName.Entry} component={wrappedComps.Entry} />
+      <S name={PageName.KakaoSignin} component={wrappedComps.KakaoSignIn} />
     </N>
   );
 };

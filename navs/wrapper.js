@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import SafeAreaPlatform from '../components/safe-area-platfrom';
 import Colors from '../styles/colors';
-import colors from '../styles/colors';
 
 const FocusAwareStatusBar = (props) => {
   const isFoused = useIsFocused();
@@ -12,12 +11,12 @@ const FocusAwareStatusBar = (props) => {
   return isFoused ? <StatusBar {...props} /> : null;
 };
 
-const commonWrap = (Component) => {
+const commonWrap = (Component, backgroundColor = Colors.M1) => {
   const NewComp = (p) => {
     if (Platform.OS === 'ios') {
       return (
         <SafeAreaPlatform
-          backgroundColor="#fff"
+          backgroundColor={backgroundColor}
           components={
             <>
               <FocusAwareStatusBar
@@ -40,7 +39,7 @@ const commonWrap = (Component) => {
     } else if (Platform.OS === 'android') {
       return (
         <SafeAreaPlatform
-          backgroundColor="#fff"
+          backgroundColor={backgroundColor}
           components={
             <>
               <FocusAwareStatusBar
@@ -59,7 +58,7 @@ const commonWrap = (Component) => {
     } else {
       return (
         <SafeAreaPlatform
-          backgroundColor="#fff"
+          backgroundColor={backgroundColor}
           components={
             <>
               <FocusAwareStatusBar

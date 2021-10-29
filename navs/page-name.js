@@ -3,6 +3,9 @@ export default {
 
   Welcome: 'welcome',
 
+  Entry: 'entry',
+  KakaoSignin: 'kakao-sign-in',
+
   Main: 'main',
   Home: 'home',
   QuestionList: 'lists',
