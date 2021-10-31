@@ -6,74 +6,34 @@ import React, {
   useState,
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import tokens from './tokens';
 import { useAddr } from '../addr';
 import axios from 'axios';
 import config from '../../config';
+import { createAuthedAxios } from './authedAxios';
 
 export const Auth2Context = createContext(null);
 
 export const useAuth = () => useContext(Auth2Context);
 
-const storeRefreshToken = async ({ refreshToken }) => {
-  await SecureStore.setItemAsync('refreshToken', refreshToken);
-};
-
-const deleteRefreshToken = async () => {
-  await SecureStore.deleteItemAsync('refreshToken');
-};
-
-const loadRefreshToken = async () => {
-  try {
-    const result = await SecureStore.getItemAsync('refreshToken');
-    return { refreshToken: result };
-  } catch (e) {
-    return { refreshToken: undefined };
+const pureLogout = async ({ status, setState }) => {
+  if (status !== 'authed') {
+    throw new Error();
   }
-};
 
-const storeAccessToken = async ({ accessToken }) => {
-  await SecureStore.setItemAsync('accessToken', accessToken);
-};
-
-const deleteAccessToken = async () => {
-  await SecureStore.deleteItemAsync('accessToken');
-};
-
-const loadAccessToken = async () => {
-  try {
-    const result = await SecureStore.getItemAsync('accessToken');
-    return { accessToken: result };
-  } catch (e) {
-    return { accessToken: undefined };
-  }
-};
-
-const storeTokens = async ({ refreshToken, accessToken }) => {
-  await storeRefreshToken({ refreshToken });
-  await storeAccessToken({ accessToken });
-};
-
-const deleteTokens = async () => {
-  await deleteRefreshToken();
-  await deleteAccessToken();
-};
-
-const loadAuthMetadata = async ({ addr, refreshToken }) => {
-  const result = await axios({
+  await axios({
     method: 'post',
-    url: `${addr}/v1/auth/refresh-tokens/`,
-    data: { refreshToken },
+    baseURL: config.apiAddr,
+    url: '/v1/auth/logout',
+    data: {
+      refreshToken: (await tokens.loadRefreshToken()).refreshToken,
+    },
   });
 
-  return {
-    accessToken: result.data.access.token,
-    accessTokenExpires: new Date(result.data.access.expires),
-    refreshToken: result.data.refresh.token,
-    userId: result.data.userId,
-  };
-};
+  await tokens.deleteTokens();
 
-const attachBearer = (a) => `Bearer ${a}`;
+  setState({ status: 'logout' });
+};
 
 export const AuthProvider = ({ children }) => {
   const addr = useAddr();
@@ -83,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(async () => {
     try {
       // Get current refresh token.
-      const { refreshToken } = await loadRefreshToken();
+      const { refreshToken } = await tokens.loadRefreshToken();
 
       // If it does not exist, it's not logged in.
       if (refreshToken == null) {
@@ -91,9 +51,9 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const metadata = await loadAuthMetadata({ addr, refreshToken });
+      const metadata = await tokens.refreshTokens({ addr, refreshToken });
 
-      await storeTokens({
+      await tokens.storeTokens({
         refreshToken: metadata.refreshToken,
         accessToken: metadata.accessToken,
       });
@@ -104,13 +64,13 @@ export const AuthProvider = ({ children }) => {
       }));
     } catch (e) {
       setState({ status: 'not-authed' });
-      await deleteTokens();
+      await tokens.deleteTokens();
     }
   }, [addr]);
 
   const inst = useMemo(() => {
     const saveTokens = async ({ accessToken, refreshToken }) => {
-      await storeTokens({ refreshToken, accessToken });
+      await tokens.storeTokens({ refreshToken, accessToken });
       setState({ status: 'authed' });
     };
 
@@ -123,8 +83,8 @@ export const AuthProvider = ({ children }) => {
           logout_redirect_uri: `${config.apiAddr}/v1/auth/logout`,
         },
       });
-
-      await deleteTokens();
+      await pureLogout({ status: state.status, setState });
+      await tokens.deleteTokens();
       setState({ status: 'not-authed' });
     };
 
@@ -132,7 +92,7 @@ export const AuthProvider = ({ children }) => {
       status: state.status,
       saveTokens,
       logout,
-      // authedAxios: createAuthedAxios({ addr, state, setState }),
+      authedAxios: createAuthedAxios({ state, setState }),
     };
   }, [addr, state]);
 

@@ -32,7 +32,7 @@ export default () => {
         index: 0,
         routes: [{ name: PageName.Main }],
       });
-    } else if (auth.status === 'not-authed') {
+    } else if (auth.status === 'not-authed' || auth.status === 'logout') {
       navigation.reset({
         index: 0,
         routes: [{ name: PageName.Entry }],
