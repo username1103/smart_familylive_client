@@ -25,7 +25,7 @@ const KakaoSignin = () => {
         scalesPageToFit={false}
         style={{ marginTop: 30 }}
         source={{
-          uri: `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakao.apiKey}&response_type=code&redirect_uri=http://192.168.0.12:9850/v1/auth/oauth`,
+          uri: `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakao.apiKey}&response_type=code&redirect_uri=${config.apiAddr}/v1/auth/kakao/login`,
         }}
         injectedJavaScript={
           '(function() {if(window.document.getElementsByTagName("pre").length>0){window.ReactNativeWebView.postMessage((window.document.getElementsByTagName("pre")[0].innerHTML));}})();'
