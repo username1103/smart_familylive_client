@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View } from 'react-native';
-import LoginButton from '../../components/login-button';
+import { View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import PageName from '../../navs/page-name';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
+
+const _width = Dimensions.get('window').width * 0.6;
 
 const Dumb = ({ kakaoSignin }) => {
   return (
@@ -16,14 +17,21 @@ const Dumb = ({ kakaoSignin }) => {
         justifyContent: 'center',
       }}
     >
-      <LoginButton
-        title="카카오 로그인"
-        titleColor={'black'}
-        onPress={kakaoSignin}
-        backgroundColor={'#FFE812'}
-        accessible={true}
-        icon={require('../../assets/kakao-talk.png')}
-      />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          source={require('../../assets/logo.png')}
+          style={{ width: _width, height: _width }}
+        />
+      </View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={kakaoSignin} disabled={false}>
+          <Image
+            source={require('../../assets/kakao-login.png')}
+            style={{ width: 350 }}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

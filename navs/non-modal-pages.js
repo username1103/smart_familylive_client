@@ -7,10 +7,12 @@ import Entry from '../pages/entry';
 import KakaoSignin from '../pages/kakao-sign-in';
 import { useAuth } from '../hooks/auth';
 import { useNavigation } from '@react-navigation/native';
+import { Welcome } from '../pages/welcome';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
   KakaoSignIn: wrapper.commonWrap(KakaoSignin, '#fff'),
+  Welcome: wrapper.commonWrap(Welcome),
   Main: wrapper.commonWrapNoSafeAreaView({
     Component: Main,
     isStatusBarDark: true,
@@ -46,6 +48,8 @@ export default () => {
         headerShown: false,
       }}
     >
+      <S name={PageName.Welcome} component={wrappedComps.Welcome} />
+
       <S name={PageName.Main} component={wrappedComps.Main} />
 
       <S name={PageName.Entry} component={wrappedComps.Entry} />
