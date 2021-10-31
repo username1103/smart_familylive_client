@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { useAddr } from '../addr';
 import axios from 'axios';
@@ -74,6 +80,34 @@ export const AuthProvider = ({ children }) => {
 
   const [state, setState] = useState({ status: 'not-authed' });
 
+  useEffect(async () => {
+    try {
+      // Get current refresh token.
+      const { refreshToken } = await loadRefreshToken();
+
+      // If it does not exist, it's not logged in.
+      if (refreshToken == null) {
+        setState({ status: 'not-authed' });
+        return;
+      }
+
+      const metadata = await loadAuthMetadata({ addr, refreshToken });
+
+      await storeTokens({
+        refreshToken: metadata.refreshToken,
+        accessToken: metadata.accessToken,
+      });
+
+      setState(() => ({
+        status: 'authed',
+        ...metadata,
+      }));
+    } catch (e) {
+      setState({ status: 'not-authed' });
+      await deleteTokens();
+    }
+  }, [addr]);
+
   const inst = useMemo(() => {
     const saveTokens = async ({ accessToken, refreshToken }) => {
       await storeTokens({ refreshToken, accessToken });
@@ -83,8 +117,13 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
       await axios({
         method: 'get',
-        url: `https://kauth.kakao.com/oauth/logout?client_id=${config.kakao.apiKey}&logout_redirect_uri=http://192.168.0.12:9850/v1/auth/logout`,
+        url: 'https://kauth.kakao.com/oauth/logout',
+        params: {
+          client_id: config.kakao.apiKey,
+          logout_redirect_uri: `${config.apiAddr}/v1/auth/logout`,
+        },
       });
+
       await deleteTokens();
       setState({ status: 'not-authed' });
     };
