@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
 import CustomButton from '../../components/custom-button';
@@ -16,6 +16,12 @@ const Dumb = ({ showTestModal }) => {
           justifyContent: 'center',
         }}
       >
+        <CustomButton
+          title="오늘의 질문"
+          titleColor={Colors.M2}
+          onPress={goAlert}
+          accessible={true}
+        />
         <Text>This is home</Text>
         <CustomButton
           title="테스트 모달 버튼"
@@ -27,6 +33,19 @@ const Dumb = ({ showTestModal }) => {
     </>
   );
 };
+
+const goAlert = () =>
+     Alert.alert(                    
+      "오늘의 질문",                    
+      "이번 생일에 받고싶은 선물은?",                       
+      [                             
+        {
+          text: "OK",                             
+          onPress: () => console.log("OK Pressed"),     
+          style: "cancel"
+        },
+      ],
+    );
 
 const Logic = () => {
   const navigation = useNavigation();
