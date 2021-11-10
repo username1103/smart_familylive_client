@@ -17,7 +17,7 @@ export default ({ backgroundColor = '#fff', components }) => {
           backgroundColor: backgroundColor,
         }}
       >
-        {componets ? components : <View />}
+        {components ? components : <View />}
       </SafeAreaView>
     );
   } else {

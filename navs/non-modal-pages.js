@@ -29,17 +29,17 @@ export default () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (auth.status === 'authed') {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: PageName.Main }],
-      });
-    } else if (auth.status === 'not-authed' || auth.status === 'logout') {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: PageName.Entry }],
-      });
-    }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: PageName.Main }],
+    });
+    // if (auth.status === 'authed') {
+    // } else if (auth.status === 'not-authed' || auth.status === 'logout') {
+    //   navigation.reset({
+    //     index: 0,
+    //     routes: [{ name: PageName.Entry }],
+    //   });
+    // }
   }, [auth.status]);
 
   return (
