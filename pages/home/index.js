@@ -5,6 +5,9 @@ import Colors from '../../styles/colors';
 import CustomButton from '../../components/custom-button';
 import stateful from '../../utils/stateful';
 import PageName from '../../navs/page-name';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import Question from '../question/index';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,9 +64,22 @@ const styles = StyleSheet.create({
   name: {
     paddingLeft: 10,
   },
+  answer: {
+    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '22%',
+    borderRadius: 30,
+    marginTop: 100,
+  },
+  answerText: {
+    fontSize: 18,
+  }
 });
 
 const Dumb = ({ showTestModal }) => {
+  const navigation = useNavigation();
   return (
     <>
       <View style={styles.container}>
@@ -123,6 +139,13 @@ const Dumb = ({ showTestModal }) => {
             <Text>다정한 꼬마 비버</Text>
           </View>
         </View>
+
+        <TouchableOpacity style={styles.answer} onPress={showTestModal}>
+        <View>
+           <Text style={styles.answerText}>답변하러 가기 →</Text>
+        </View>
+        </TouchableOpacity>
+
       </View>
     </>
   );

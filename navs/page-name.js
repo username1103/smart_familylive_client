@@ -9,6 +9,7 @@ export default {
   Main: 'main',
   Home: 'home',
   QuestionList: 'lists',
+  Question: 'question',
   Shop: 'shop',
   Settings: 'settings',
 
