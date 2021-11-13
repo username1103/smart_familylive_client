@@ -18,6 +18,7 @@ const KakaoSignin = () => {
 
     await auth.saveTokens({ accessToken, refreshToken });
   };
+
   return (
     <View style={{ flex: 1 }}>
       <WebView

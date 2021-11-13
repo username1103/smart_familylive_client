@@ -29,17 +29,17 @@ export default () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: PageName.Main }],
-    });
-    // if (auth.status === 'authed') {
-    // } else if (auth.status === 'not-authed' || auth.status === 'logout') {
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: PageName.Entry }],
-    //   });
-    // }
+    if (auth.status === 'authed') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: PageName.Main }],
+      });
+    } else if (auth.status === 'not-authed' || auth.status === 'logout') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: PageName.Entry }],
+      });
+    }
   }, [auth.status]);
 
   return (
@@ -53,7 +53,6 @@ export default () => {
       <S name={PageName.Main} component={wrappedComps.Main} />
 
       <S name={PageName.Entry} component={wrappedComps.Entry} />
-      <S name={PageName.KakaoSignin} component={wrappedComps.KakaoSignIn} />
     </N>
   );
 };
