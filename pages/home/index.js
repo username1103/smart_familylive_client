@@ -128,7 +128,7 @@ const Dumb = ({ showTestModal }) => {
   );
 };
 
-const Logic = () => {
+const Logic = (p) => {
   const navigation = useNavigation();
 
   const showTestModal = () => {

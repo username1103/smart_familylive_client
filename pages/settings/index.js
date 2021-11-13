@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useAuth } from '../../hooks/auth';
+import { useDevice } from '../../hooks/device';
 
 import stateful from '../../utils/stateful';
 
@@ -37,10 +38,16 @@ const Dumb = (p) => {
 };
 
 const Logic = () => {
-  const auth = useAuth();
+  const authHook = useAuth();
+  const deviceHook = useDevice();
+
+  const logout = async () => {
+    await deviceHook.removeDeviceToken();
+    await authHook.logout();
+  };
 
   return {
-    logout: auth.logout,
+    logout,
   };
 };
 

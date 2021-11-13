@@ -5,7 +5,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import * as SecureStore from 'expo-secure-store';
 import tokens from './tokens';
 import { useAddr } from '../addr';
 import axios from 'axios';
@@ -60,18 +59,24 @@ export const AuthProvider = ({ children }) => {
 
       setState(() => ({
         status: 'authed',
-        ...metadata,
+        userId: metadata.userId,
       }));
     } catch (e) {
+      console.log(e);
       setState({ status: 'not-authed' });
       await tokens.deleteTokens();
     }
   }, [addr]);
 
   const inst = useMemo(() => {
-    const saveTokens = async ({ accessToken, refreshToken }) => {
+    const saveTokens = async ({
+      userId,
+      needInit,
+      accessToken,
+      refreshToken,
+    }) => {
       await tokens.storeTokens({ refreshToken, accessToken });
-      setState({ status: 'authed' });
+      setState({ status: 'authed', userId, needInit });
     };
 
     const logout = async () => {
@@ -84,12 +89,12 @@ export const AuthProvider = ({ children }) => {
         },
       });
       await pureLogout({ status: state.status, setState });
-      await tokens.deleteTokens();
-      setState({ status: 'not-authed' });
     };
 
     return {
       status: state.status,
+      userId: state.userId,
+      needInit: state.needInit,
       saveTokens,
       logout,
       authedAxios: createAuthedAxios({ state, setState }),

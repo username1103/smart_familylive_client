@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const storeRefreshToken = async ({ refreshToken }) => {
@@ -54,6 +55,7 @@ const refreshTokens = async ({ addr, refreshToken }) => {
   return {
     accessToken: result.data.access.token,
     refreshToken: result.data.refresh.token,
+    userId: result.data.userId,
   };
 };
 

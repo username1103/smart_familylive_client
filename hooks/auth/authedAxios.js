@@ -32,57 +32,6 @@ baseCall.interceptors.request.use(async (config) => {
   return config;
 });
 
-baseCall.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (isTokenError(error)) {
-      try {
-        let metadata;
-
-        if (!isRefreshingTokens) {
-          isRefreshingTokens = true;
-
-          metadata = await tokens.refreshTokens({
-            addr: config.apiAddr,
-            refreshToken: (await tokens.loadRefreshToken()).refreshToken,
-          });
-
-          await storeTokens({
-            refreshToken: metadata.refreshToken,
-            accessToken: metadata.accessToken,
-          });
-          isRefreshingTokens = false;
-
-          const result = await baseCall(options);
-
-          onTokenRefreshed(metadata.accessToken);
-          // Return the response.
-          return result;
-        }
-
-        const retryOriginalRequest = new Promise((resolve) => {
-          addRefreshSubscriber((accessToken) => {
-            originalRequest.headers.Authorization = attachBearer(accessToken);
-            resolve(axios(originalRequest));
-          });
-        });
-
-        return retryOriginalRequest;
-      } catch (err) {
-        isRefreshingTokens = false;
-        await tokens.deleteTokens();
-        throw err;
-      }
-    } else {
-      throw error;
-    }
-  }
-);
-
 export const createAuthedAxios = ({ state, setState }) => {
   if (state.status !== 'authed') {
     return axios;
@@ -91,12 +40,51 @@ export const createAuthedAxios = ({ state, setState }) => {
   const authedAxios = async (options) => {
     try {
       return baseCall(options);
-    } catch (err) {
-      if (isTokenError(err)) {
-        setState({ status: 'not-authed' });
-      }
+    } catch (error) {
+      const originalRequest = error.config;
 
-      throw err;
+      if (isTokenError(error)) {
+        try {
+          let metadata;
+
+          if (!isRefreshingTokens) {
+            isRefreshingTokens = true;
+
+            metadata = await tokens.refreshTokens({
+              addr: config.apiAddr,
+              refreshToken: (await tokens.loadRefreshToken()).refreshToken,
+            });
+
+            await storeTokens({
+              refreshToken: metadata.refreshToken,
+              accessToken: metadata.accessToken,
+            });
+            isRefreshingTokens = false;
+
+            const result = await baseCall(options);
+
+            onTokenRefreshed(metadata.accessToken);
+            // Return the response.
+            return result;
+          }
+
+          const retryOriginalRequest = new Promise((resolve) => {
+            addRefreshSubscriber((accessToken) => {
+              originalRequest.headers.Authorization = attachBearer(accessToken);
+              resolve(axios(originalRequest));
+            });
+          });
+
+          return retryOriginalRequest;
+        } catch (err) {
+          isRefreshingTokens = false;
+          setState({ status: 'not-authed' });
+          await tokens.deleteTokens();
+          throw err;
+        }
+      } else {
+        throw error;
+      }
     }
   };
 

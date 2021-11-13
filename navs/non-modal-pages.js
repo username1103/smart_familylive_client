@@ -8,6 +8,11 @@ import KakaoSignin from '../pages/kakao-sign-in';
 import { useAuth } from '../hooks/auth';
 import { useNavigation } from '@react-navigation/native';
 import { Welcome } from '../pages/welcome';
+import BloodType from '../pages/bloodType';
+import Gender from '../pages/gender';
+import Birthday from '../pages/birthday';
+import Name from '../pages/name';
+import { useUser } from '../hooks/user';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -17,6 +22,10 @@ const wrappedComps = {
     Component: Main,
     isStatusBarDark: true,
   }),
+  Name: wrapper.commonWrap(Name),
+  BloodType: wrapper.commonWrap(BloodType),
+  Gender: wrapper.commonWrap(Gender),
+  Birthday: wrapper.commonWrap(Birthday),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -25,22 +34,31 @@ export default () => {
   const N = NonModalPagesNav.Navigator;
   const S = NonModalPagesNav.Screen;
 
-  const auth = useAuth();
   const navigation = useNavigation();
+  const authHook = useAuth();
 
-  useEffect(() => {
-    if (auth.status === 'authed') {
+  useEffect(async () => {
+    if (authHook.status === 'authed') {
+      if (authHook.needInit) {
+        return navigation.reset({
+          index: 0,
+          routes: [{ name: PageName.Name }],
+        });
+      }
       navigation.reset({
         index: 0,
         routes: [{ name: PageName.Main }],
       });
-    } else if (auth.status === 'not-authed' || auth.status === 'logout') {
+    } else if (
+      authHook.status === 'not-authed' ||
+      authHook.status === 'logout'
+    ) {
       navigation.reset({
         index: 0,
         routes: [{ name: PageName.Entry }],
       });
     }
-  }, [auth.status]);
+  }, [authHook.status]);
 
   return (
     <N
@@ -53,6 +71,11 @@ export default () => {
       <S name={PageName.Main} component={wrappedComps.Main} />
 
       <S name={PageName.Entry} component={wrappedComps.Entry} />
+
+      <S name={PageName.Name} component={wrappedComps.Name} />
+      <S name={PageName.BloodType} component={wrappedComps.BloodType} />
+      <S name={PageName.Gender} component={wrappedComps.Gender} />
+      <S name={PageName.Birthday} component={wrappedComps.Birthday} />
     </N>
   );
 };

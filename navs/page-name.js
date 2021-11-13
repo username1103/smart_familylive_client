@@ -12,5 +12,10 @@ export default {
   Shop: 'shop',
   Settings: 'settings',
 
+  Name: 'name',
+  BloodType: 'blood-type',
+  Gender: 'gender',
+  Birthday: 'birthday',
+
   TestModal: 'test-modal',
 };

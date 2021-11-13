@@ -16,7 +16,12 @@ const KakaoSignin = () => {
     const accessToken = result.access.token;
     const refreshToken = result.refresh.token;
 
-    await auth.saveTokens({ accessToken, refreshToken });
+    await auth.saveTokens({
+      userId: result.userId,
+      needInit: result.needInit,
+      accessToken,
+      refreshToken,
+    });
   };
 
   return (

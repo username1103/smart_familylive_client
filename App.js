@@ -1,16 +1,25 @@
 import React from 'react';
+import moment from 'moment';
 import { NavigationContainer } from '@react-navigation/native';
 import Root from './navs/root.js';
 import { AddrProvider } from './hooks/addr/index.js';
 import { AuthProvider } from './hooks/auth/index.js';
+import { UserProvider } from './hooks/user/index.js';
+import { DeviceWrapper } from './hooks/device/index.js';
+
+moment.locale('ko');
 
 export default function App() {
   return (
     <AddrProvider>
       <AuthProvider>
-        <NavigationContainer>
-          <Root />
-        </NavigationContainer>
+        <DeviceWrapper>
+          <UserProvider>
+            <NavigationContainer>
+              <Root />
+            </NavigationContainer>
+          </UserProvider>
+        </DeviceWrapper>
       </AuthProvider>
     </AddrProvider>
   );
