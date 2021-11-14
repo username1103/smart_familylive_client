@@ -69,6 +69,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingLeft: 10,
   },
+  answer: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '22%',
+    borderRadius: 30,
+    marginTop: 100,
+  },
+  answerText: {
+    fontSize: 18,
+  },
 });
 
 const Dumb = (p) => {
@@ -133,6 +145,11 @@ const Dumb = (p) => {
               </View>
             ))}
           </View>
+          <TouchableOpacity style={styles.answer} onPress={showTestModal}>
+            <View>
+              <Text style={styles.answerText}>답변하러 가기 →</Text>
+            </View>
+          </TouchableOpacity>
         </>
       }
     />
