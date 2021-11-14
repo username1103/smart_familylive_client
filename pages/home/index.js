@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '20%',
     justifyContent: 'center',
-    backgroundColor: '#ffb486',
+    backgroundColor: Colors.M4,
     borderRadius: 20,
   },
   content: {
@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   answer: {
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: '22%',
+    width: '80%',
+    height: 35,
     borderRadius: 30,
-    marginTop: 100,
+    borderWidth: 1,
+    borderColor: Colors.M3,
   },
   answerText: {
     fontSize: 18,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { users } = p;
+  const { users, showTestModal } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -127,6 +127,8 @@ const Dumb = (p) => {
                           justifyContent: 'center',
                           backgroundColor: Colors.M1,
                           borderRadius: 50,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
                         }}
                       >
                         <SimpleLineIcons name="user" size={30} color="black" />
@@ -144,12 +146,21 @@ const Dumb = (p) => {
                 )}
               </View>
             ))}
-          </View>
-          <TouchableOpacity style={styles.answer} onPress={showTestModal}>
-            <View>
-              <Text style={styles.answerText}>답변하러 가기 →</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <TouchableOpacity style={styles.answer} onPress={showTestModal}>
+                <View>
+                  <Text style={styles.answerText}>답변하러 가기 →</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
         </>
       }
     />
@@ -163,7 +174,6 @@ const Logic = (p) => {
   const userHook = useUser();
 
   const [users, setUsers] = useState([]);
-  const [showModal, setShowModal] = useState(true);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -171,10 +181,6 @@ const Logic = (p) => {
     });
 
     const { groupMembers } = await groupHook.getMembers({ groupId });
-    if (groupMembers.length === 1 && showModal) {
-      navigation.navigate(PageName.InitGroup);
-      setShowModal(false);
-    }
 
     const users = await Promise.all(
       groupMembers.map((groupMember) =>
@@ -184,11 +190,15 @@ const Logic = (p) => {
     setUsers(users);
   };
 
+  const showTestModal = () => {
+    navigation.navigate(PageName.TestModal);
+  };
+
   useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
 
   useEffect(() => init(), []);
 
-  return { users };
+  return { users, showTestModal };
 };
 
 let Home = stateful(Dumb, Logic);
