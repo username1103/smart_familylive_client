@@ -48,7 +48,7 @@ const deleteTokens = async () => {
 const refreshTokens = async ({ addr, refreshToken }) => {
   const result = await axios({
     method: 'post',
-    url: `${addr}/v1/auth/refresh-tokens/`,
+    url: `${addr}/v1/auth/refresh-tokens`,
     data: { refreshToken },
   });
 
