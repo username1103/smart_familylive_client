@@ -9,6 +9,8 @@ import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
+import CustomHeader from '../../components/custom-header';
 
 const styles = StyleSheet.create({
   container: {
@@ -73,59 +75,67 @@ const Dumb = (p) => {
   const { users } = p;
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.header} />
-        <View style={styles.title}>
-          <Text style={{ marginHorizontal: 15, fontSize: 20, color: 'white' }}>
-            {' '}
-            ☆ 오늘의 질문{'\n'}
-            {'\n'} 이번 여름 휴가는 어디가 좋을까요?
-          </Text>
-        </View>
-        {users.map((user) => (
-          <View style={styles.elem}>
-            <View style={styles.userInfo}>
-              <View style={styles.profile}>
-                {user.thumbnail !== '' ? (
-                  <Image
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      resizeMode: 'contain',
-                    }}
-                    source={{
-                      uri: user.thumbnail,
-                    }}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: Colors.M1,
-                      borderRadius: 50,
-                    }}
-                  >
-                    <SimpleLineIcons name="user" size={30} color="black" />
+    <SafeAreaPlatfrom
+      backgroundColor={Colors.M1}
+      components={
+        <>
+          <CustomHeader headerTitle="Home" />
+          <View style={styles.container}>
+            <View style={styles.header} />
+            <View style={styles.title}>
+              <Text
+                style={{ marginHorizontal: 15, fontSize: 20, color: 'white' }}
+              >
+                {' '}
+                ☆ 오늘의 질문{'\n'}
+                {'\n'} 이번 여름 휴가는 어디가 좋을까요?
+              </Text>
+            </View>
+            {users.map((user) => (
+              <View style={styles.elem}>
+                <View style={styles.userInfo}>
+                  <View style={styles.profile}>
+                    {user.thumbnail !== '' ? (
+                      <Image
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          resizeMode: 'contain',
+                        }}
+                        source={{
+                          uri: user.thumbnail,
+                        }}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: Colors.M1,
+                          borderRadius: 50,
+                        }}
+                      >
+                        <SimpleLineIcons name="user" size={30} color="black" />
+                      </View>
+                    )}
                   </View>
+                  <Text style={styles.name}>{user.name}</Text>
+                </View>
+                {user.statusMessage !== '' ? (
+                  <View style={styles.userComment}>
+                    <Text>{user.statusMessage}</Text>
+                  </View>
+                ) : (
+                  <></>
                 )}
               </View>
-              <Text style={styles.name}>{user.name}</Text>
-            </View>
-            {user.statusMessage !== '' ? (
-              <View style={styles.userComment}>
-                <Text>{user.statusMessage}</Text>
-              </View>
-            ) : (
-              <></>
-            )}
+            ))}
           </View>
-        ))}
-      </View>
-    </>
+        </>
+      }
+    />
   );
 };
 

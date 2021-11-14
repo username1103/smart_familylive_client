@@ -17,7 +17,10 @@ export default {
   Gender: 'gender',
   Birthday: 'birthday',
 
-  InitGroup: 'init-group',
+  NotMatch: 'not-match',
+  InsertCode: 'insert-code',
+  ConnectionCode: 'connection-code',
 
+  InitGroup: 'init-group',
   TestModal: 'test-modal',
 };

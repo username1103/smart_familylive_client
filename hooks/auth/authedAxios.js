@@ -43,12 +43,12 @@ export const createAuthedAxios = ({ state, setState }) => {
       const originalRequest = error.config;
 
       if (isTokenError(error)) {
-        try {
-          let metadata;
+        let metadata;
 
-          if (!isRefreshingTokens) {
-            isRefreshingTokens = true;
+        if (!isRefreshingTokens) {
+          isRefreshingTokens = true;
 
+          try {
             metadata = await tokens.refreshTokens({
               addr: config.apiAddr,
               refreshToken: (await tokens.loadRefreshToken()).refreshToken,
@@ -59,28 +59,28 @@ export const createAuthedAxios = ({ state, setState }) => {
               accessToken: metadata.accessToken,
             });
             isRefreshingTokens = false;
-
-            const result = await baseCall(options);
-
-            onTokenRefreshed(metadata.accessToken);
-            // Return the response.
-            return result;
+          } catch (err) {
+            isRefreshingTokens = false;
+            setState({ status: 'not-authed' });
+            await tokens.deleteTokens();
+            throw err;
           }
 
-          const retryOriginalRequest = new Promise((resolve) => {
-            addRefreshSubscriber((accessToken) => {
-              originalRequest.headers.Authorization = attachBearer(accessToken);
-              resolve(axios(originalRequest));
-            });
-          });
+          const result = await baseCall(options);
 
-          return retryOriginalRequest;
-        } catch (err) {
-          isRefreshingTokens = false;
-          setState({ status: 'not-authed' });
-          await tokens.deleteTokens();
-          throw err;
+          onTokenRefreshed(metadata.accessToken);
+          // Return the response.
+          return result;
         }
+
+        const retryOriginalRequest = new Promise((resolve) => {
+          addRefreshSubscriber((accessToken) => {
+            originalRequest.headers.Authorization = attachBearer(accessToken);
+            resolve(axios(originalRequest));
+          });
+        });
+
+        return retryOriginalRequest;
       } else {
         throw error;
       }

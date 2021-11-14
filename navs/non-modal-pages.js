@@ -12,6 +12,9 @@ import BloodType from '../pages/bloodType';
 import Gender from '../pages/gender';
 import Birthday from '../pages/birthday';
 import Name from '../pages/name';
+import ConnectionCode from '../pages/connetion-code';
+import NotMatch from '../pages/not-match';
+import InsertCode from '../pages/insert-code';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -25,6 +28,10 @@ const wrappedComps = {
   BloodType: wrapper.commonWrap(BloodType),
   Gender: wrapper.commonWrap(Gender),
   Birthday: wrapper.commonWrap(Birthday),
+
+  NotMatch: wrapper.commonWrap(NotMatch),
+  InsertCode: wrapper.commonWrap(InsertCode),
+  ConnectionCode: wrapper.commonWrap(ConnectionCode),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -44,6 +51,12 @@ export default () => {
           routes: [{ name: PageName.Name }],
         });
       }
+      if (!authHook.isMatched) {
+        return navigation.reset({
+          index: 0,
+          routes: [{ name: PageName.NotMatch }],
+        });
+      }
       navigation.reset({
         index: 0,
         routes: [{ name: PageName.Main }],
@@ -57,7 +70,7 @@ export default () => {
         routes: [{ name: PageName.Entry }],
       });
     }
-  }, [authHook.status]);
+  }, [authHook.status, authHook.isMatched, authHook.needInit]);
 
   return (
     <N
@@ -75,6 +88,13 @@ export default () => {
       <S name={PageName.BloodType} component={wrappedComps.BloodType} />
       <S name={PageName.Gender} component={wrappedComps.Gender} />
       <S name={PageName.Birthday} component={wrappedComps.Birthday} />
+
+      <S name={PageName.NotMatch} component={wrappedComps.NotMatch} />
+      <S name={PageName.InsertCode} component={wrappedComps.InsertCode} />
+      <S
+        name={PageName.ConnectionCode}
+        component={wrappedComps.ConnectionCode}
+      />
     </N>
   );
 };

@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         status: 'authed',
         userId: metadata.userId,
         needInit: metadata.needInit,
+        isMatched: metadata.isMatched,
       }));
     } catch (e) {
       console.log(e);
@@ -70,14 +71,19 @@ export const AuthProvider = ({ children }) => {
   }, [addr]);
 
   const inst = useMemo(() => {
+    const updateInfo = async ({ status, isMatched, needInit, userId }) => {
+      setState({ status, isMatched, needInit, userId });
+    };
+
     const saveTokens = async ({
       userId,
       needInit,
+      isMatched,
       accessToken,
       refreshToken,
     }) => {
       await tokens.storeTokens({ refreshToken, accessToken });
-      setState({ status: 'authed', userId, needInit });
+      setState({ status: 'authed', userId, needInit, isMatched });
     };
 
     const logout = async () => {
@@ -96,6 +102,8 @@ export const AuthProvider = ({ children }) => {
       status: state.status,
       userId: state.userId,
       needInit: state.needInit,
+      isMatched: state.isMatched,
+      updateInfo,
       saveTokens,
       logout,
       authedAxios: createAuthedAxios({ state, setState }),

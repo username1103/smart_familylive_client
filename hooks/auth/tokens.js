@@ -57,6 +57,7 @@ const refreshTokens = async ({ addr, refreshToken }) => {
     refreshToken: result.data.refresh.token,
     userId: result.data.userId,
     needInit: result.data.needInit,
+    isMatched: result.data.isMatched,
   };
 };
 

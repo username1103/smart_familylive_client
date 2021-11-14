@@ -42,7 +42,17 @@ export const UserProvider = ({ children }) => {
       });
     };
 
-    return { get, update, getUserGroup };
+    const sendCode = async ({ userId, code }) => {
+      await authHook.authedAxios({
+        method: 'post',
+        url: `${addr}/v1/users/${userId}/register-code`,
+        data: {
+          code,
+        },
+      });
+    };
+
+    return { get, update, getUserGroup, sendCode };
   };
 
   const [state, setState] = useState(take());

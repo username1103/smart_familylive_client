@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import moment from 'moment';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
-import { useNavigation } from '@react-navigation/native';
-import PageName from '../../navs/page-name';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -32,7 +30,7 @@ const Dumb = (p) => {
         <View style={{ marginTop: -91 }}>
           <DateTimePicker
             mode={'date'}
-            display={'spinner'}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             value={date}
             locale={'ko'}
             maximumDate={new Date(2021, 12, 31)}
@@ -74,7 +72,6 @@ const Dumb = (p) => {
 const Logic = (p) => {
   const payload = p.route.params;
 
-  const navigation = useNavigation();
   const userHook = useUser();
   const authHook = useAuth();
 
@@ -87,7 +84,14 @@ const Logic = (p) => {
       birthday: moment(date).format('YYYY-MM-DD'),
     });
 
-    navigation.navigate(PageName.Main);
+    const user = await userHook.get({ userId: authHook.userId });
+
+    await authHook.updateInfo({
+      isMatched: user.isMatched,
+      needInit: !user.birthday,
+      status: 'authed',
+      userId: user._id.toString(),
+    });
   };
   return {
     goNext,
