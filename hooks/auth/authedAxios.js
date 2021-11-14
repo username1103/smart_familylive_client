@@ -26,9 +26,8 @@ const baseCall = axios.create({
 });
 
 baseCall.interceptors.request.use(async (config) => {
-  config.headers.Authorization = attachBearer(
-    (await tokens.loadAccessToken()).accessToken
-  );
+  const { accessToken } = await tokens.loadAccessToken();
+  config.headers.Authorization = attachBearer(accessToken);
   return config;
 });
 
@@ -39,7 +38,7 @@ export const createAuthedAxios = ({ state, setState }) => {
 
   const authedAxios = async (options) => {
     try {
-      return baseCall(options);
+      return await baseCall(options);
     } catch (error) {
       const originalRequest = error.config;
 
@@ -55,7 +54,7 @@ export const createAuthedAxios = ({ state, setState }) => {
               refreshToken: (await tokens.loadRefreshToken()).refreshToken,
             });
 
-            await storeTokens({
+            await tokens.storeTokens({
               refreshToken: metadata.refreshToken,
               accessToken: metadata.accessToken,
             });

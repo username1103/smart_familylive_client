@@ -68,15 +68,6 @@ export const DeviceWrapper = ({ children }) => {
     userId = authHook.userId;
   }
 
-  const removeDeviceToken = async () => {
-    if (deviceToken !== '') {
-      await authHook.authedAxios({
-        method: 'delete',
-        url: `${addr}/v1/devices`,
-        params: { user: userId, deviceToken },
-      });
-    }
-  };
   useEffect(async () => {
     if (authHook.status === 'authed') {
       await ensure({
@@ -97,11 +88,21 @@ export const DeviceWrapper = ({ children }) => {
         setDeviceToken,
       });
 
+    const removeDeviceToken = async () => {
+      if (deviceToken !== '') {
+        await authHook.authedAxios({
+          method: 'delete',
+          url: `${addr}/v1/devices`,
+          params: { user: userId, deviceToken },
+        });
+      }
+    };
+
     return { ensure: ensure_, removeDeviceToken };
   };
 
   const [state, setState] = useState(take());
-  useEffect(() => () => setState(take()), [addr, authHook]);
+  useEffect(() => setState(take()), [addr, authHook.status]);
 
   return (
     <DeviceContext.Provider value={state}>{children}</DeviceContext.Provider>

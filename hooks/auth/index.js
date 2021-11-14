@@ -60,6 +60,7 @@ export const AuthProvider = ({ children }) => {
       setState(() => ({
         status: 'authed',
         userId: metadata.userId,
+        needInit: metadata.needInit,
       }));
     } catch (e) {
       console.log(e);

@@ -17,5 +17,7 @@ export default {
   Gender: 'gender',
   Birthday: 'birthday',
 
+  InitGroup: 'init-group',
+
   TestModal: 'test-modal',
 };

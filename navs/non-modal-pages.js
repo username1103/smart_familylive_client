@@ -12,7 +12,6 @@ import BloodType from '../pages/bloodType';
 import Gender from '../pages/gender';
 import Birthday from '../pages/birthday';
 import Name from '../pages/name';
-import { useUser } from '../hooks/user';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),

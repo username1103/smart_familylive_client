@@ -17,8 +17,18 @@ export const UserProvider = ({ children }) => {
         url: `${addr}/v1/users/${userId}`,
       });
 
-      return result.data.user;
+      return result.data;
     };
+
+    const getUserGroup = async ({ userId }) => {
+      const result = await authHook.authedAxios({
+        method: 'get',
+        url: `${addr}/v1/users/${userId}/groups`,
+      });
+
+      return result.data;
+    };
+
     const update = async ({ userId, name, bloodType, gender, birthday }) => {
       await authHook.authedAxios({
         method: 'put',
@@ -32,7 +42,7 @@ export const UserProvider = ({ children }) => {
       });
     };
 
-    return { get, update };
+    return { get, update, getUserGroup };
   };
 
   const [state, setState] = useState(take());

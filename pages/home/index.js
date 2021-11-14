@@ -1,10 +1,14 @@
-import React from 'react';
-import { Text, View, Alert, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
-import CustomButton from '../../components/custom-button';
+import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 import stateful from '../../utils/stateful';
 import PageName from '../../navs/page-name';
+import { useGroup } from '../../hooks/group';
+import { useAuth } from '../../hooks/auth';
+import { useUser } from '../../hooks/user';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +25,7 @@ const styles = StyleSheet.create({
     height: '20%',
     justifyContent: 'center',
     backgroundColor: '#ffb486',
+    borderRadius: 20,
   },
   content: {
     flex: 1,
@@ -36,11 +41,11 @@ const styles = StyleSheet.create({
   },
   elem: {
     width: '100%',
-    height: '16%',
+    height: '12%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderColor: '#eee',
+    borderColor: '#f7bca8',
     borderBottomWidth: 0.5,
     padding: 5,
   },
@@ -54,75 +59,71 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   profile: {
-    width: 75,
-    height: 75,
+    width: 50,
+    height: 50,
     borderRadius: 50,
   },
   name: {
+    fontSize: 15,
     paddingLeft: 10,
   },
 });
 
-const Dumb = ({ showTestModal }) => {
+const Dumb = (p) => {
+  const { users } = p;
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.header} />
-        <Text style={{ fontSize: 15, color: 'white' }}>
-          {'공지 >> 11월 질문 업데이트 완료'}
-        </Text>
         <View style={styles.title}>
-          <Text style={{ fontSize: 20, color: 'white' }}>
+          <Text style={{ marginHorizontal: 15, fontSize: 20, color: 'white' }}>
             {' '}
             ☆ 오늘의 질문{'\n'}
             {'\n'} 이번 여름 휴가는 어디가 좋을까요?
           </Text>
         </View>
-
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img1.jpeg')}
-              />
+        {users.map((user) => (
+          <View style={styles.elem}>
+            <View style={styles.userInfo}>
+              <View style={styles.profile}>
+                {user.thumbnail !== '' ? (
+                  <Image
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                      resizeMode: 'contain',
+                    }}
+                    source={{
+                      uri: user.thumbnail,
+                    }}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: Colors.M1,
+                      borderRadius: 50,
+                    }}
+                  >
+                    <SimpleLineIcons name="user" size={30} color="black" />
+                  </View>
+                )}
+              </View>
+              <Text style={styles.name}>{user.name}</Text>
             </View>
-            <Text style={styles.name}>뽀로로</Text>
+            {user.statusMessage !== '' ? (
+              <View style={styles.userComment}>
+                <Text>{user.statusMessage}</Text>
+              </View>
+            ) : (
+              <></>
+            )}
           </View>
-          <View style={styles.userComment}>
-            <Text>호기심이 많은 꼬마 펭귄</Text>
-          </View>
-        </View>
-
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img2.jpeg')}
-              />
-            </View>
-            <Text style={styles.name}>크롱</Text>
-          </View>
-          <View style={styles.userComment}>
-            <Text>재롱둥이 아기 공룡</Text>
-          </View>
-        </View>
-
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img3.jpeg')}
-              />
-            </View>
-            <Text style={styles.name}>루피</Text>
-          </View>
-          <View style={styles.userComment}>
-            <Text>다정한 꼬마 비버</Text>
-          </View>
-        </View>
+        ))}
       </View>
     </>
   );
@@ -130,24 +131,37 @@ const Dumb = ({ showTestModal }) => {
 
 const Logic = (p) => {
   const navigation = useNavigation();
+  const groupHook = useGroup();
+  const authHook = useAuth();
+  const userHook = useUser();
 
-  const showTestModal = () => {
-    navigation.navigate(PageName.TestModal);
+  const [users, setUsers] = useState([]);
+  const [showModal, setShowModal] = useState(true);
+
+  const init = async () => {
+    const { groupId } = await userHook.getUserGroup({
+      userId: authHook.userId,
+    });
+
+    const { groupMembers } = await groupHook.getMembers({ groupId });
+    if (groupMembers.length === 1 && showModal) {
+      navigation.navigate(PageName.InitGroup);
+      setShowModal(false);
+    }
+
+    const users = await Promise.all(
+      groupMembers.map((groupMember) =>
+        userHook.get({ userId: groupMember.user })
+      )
+    );
+    setUsers(users);
   };
 
-  const goAlert = () =>
-    Alert.alert('오늘의 질문', '이번 생일에 받고싶은 선물은?', [
-      {
-        text: 'OK',
-        onPress: () => console.log('OK Pressed'),
-        style: 'cancel',
-      },
-    ]);
+  useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
 
-  return {
-    showTestModal,
-    goAlert,
-  };
+  useEffect(() => init(), []);
+
+  return { users };
 };
 
 let Home = stateful(Dumb, Logic);

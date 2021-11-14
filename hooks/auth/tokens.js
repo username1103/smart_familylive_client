@@ -56,6 +56,7 @@ const refreshTokens = async ({ addr, refreshToken }) => {
     accessToken: result.data.access.token,
     refreshToken: result.data.refresh.token,
     userId: result.data.userId,
+    needInit: result.data.needInit,
   };
 };
 
