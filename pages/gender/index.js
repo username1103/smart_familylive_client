@@ -24,6 +24,8 @@ const Dumb = (p) => {
       <View
         style={{
           flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <View
@@ -31,6 +33,7 @@ const Dumb = (p) => {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           {['M', 'W'].map((type) => (
@@ -47,8 +50,20 @@ const Dumb = (p) => {
             </TouchableOpacity>
           ))}
         </View>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         {gender && (
-          <TouchableOpacity onPress={goNext} disabled={gender === null}>
+          <TouchableOpacity
+            style={{ marginHorizontal: 50 }}
+            onPress={goNext}
+            disabled={gender === null}
+          >
             <View
               style={{
                 justifyContent: 'center',
@@ -57,8 +72,7 @@ const Dumb = (p) => {
                 borderRadius: 15,
                 borderColor: Colors.M3,
                 borderWidth: 1,
-                marginHorizontal: 50,
-                marginBottom: 120,
+                paddingHorizontal: 80,
               }}
             >
               <Text

@@ -25,11 +25,11 @@ const Dumb = (p) => {
         style={{
           flex: 1,
           justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <View
           style={{
-            flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
           }}
@@ -50,8 +50,20 @@ const Dumb = (p) => {
             </View>
           ))}
         </View>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         {bloodType && (
-          <TouchableOpacity onPress={goNext} disabled={bloodType === null}>
+          <TouchableOpacity
+            style={{ marginHorizontal: 50 }}
+            onPress={goNext}
+            disabled={bloodType === null}
+          >
             <View
               style={{
                 justifyContent: 'center',
@@ -60,8 +72,8 @@ const Dumb = (p) => {
                 borderRadius: 15,
                 borderColor: Colors.M3,
                 borderWidth: 1,
-                marginHorizontal: 50,
-                marginBottom: 120,
+
+                paddingHorizontal: 80,
               }}
             >
               <Text
@@ -91,6 +103,7 @@ const Logic = (p) => {
   const goNext = () => {
     navigation.navigate(PageName.Gender, { ...payload, bloodType });
   };
+
   return {
     goNext,
     bloodType,

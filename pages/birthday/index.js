@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import moment from 'moment';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
 import { useAuth } from '../../hooks/auth';
@@ -8,7 +8,7 @@ import { useUser } from '../../hooks/user';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Dumb = (p) => {
-  const { goNext, date, setDate } = p;
+  const { goNext, date, setDate, setBirthday, showDate, setShowDate } = p;
 
   return (
     <>
@@ -25,21 +25,56 @@ const Dumb = (p) => {
       <View
         style={{
           flex: 1,
+          justifyContent: 'center',
         }}
       >
-        <View style={{ marginTop: -91 }}>
+        {Platform.OS === 'ios' ? (
           <DateTimePicker
             mode={'date'}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            display={'spinner'}
             value={date}
             locale={'ko'}
             maximumDate={new Date(2021, 12, 31)}
             onChange={(event, selectedDate) => setDate(selectedDate)}
           />
-        </View>
+        ) : (
+          <>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: Colors.DISABLE,
+                }}
+                onPress={() => setShowDate(true)}
+              >
+                <Text style={{ fontSize: 20 }}>
+                  {moment(date).format('YYYY년 MM월 DD일')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {showDate && (
+              <DateTimePicker
+                mode={'date'}
+                display={'default'}
+                value={date}
+                locale={'ko'}
+                maximumDate={new Date()}
+                onChange={(event, selectedDate) => setBirthday(selectedDate)}
+              />
+            )}
+          </>
+        )}
+      </View>
 
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {date && (
-          <TouchableOpacity onPress={goNext}>
+          <TouchableOpacity style={{ marginHorizontal: 50 }} onPress={goNext}>
             <View
               style={{
                 justifyContent: 'center',
@@ -48,8 +83,7 @@ const Dumb = (p) => {
                 borderRadius: 15,
                 borderColor: Colors.M3,
                 borderWidth: 1,
-                marginHorizontal: 50,
-                marginTop: 106,
+                paddingHorizontal: 80,
               }}
             >
               <Text
@@ -76,6 +110,14 @@ const Logic = (p) => {
   const authHook = useAuth();
 
   const [date, setDate] = useState(new Date());
+  const [showDate, setShowDate] = useState(false);
+
+  const setBirthday = (date) => {
+    if (date !== undefined) {
+      setDate(date);
+    }
+    setShowDate(false);
+  };
 
   const goNext = async () => {
     await userHook.update({
@@ -97,6 +139,9 @@ const Logic = (p) => {
     goNext,
     date,
     setDate,
+    setBirthday,
+    showDate,
+    setShowDate,
   };
 };
 

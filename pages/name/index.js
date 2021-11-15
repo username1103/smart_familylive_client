@@ -25,52 +25,53 @@ const Dumb = (p) => {
         style={{
           flex: 1,
           justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <View
+        <TextInput
+          placeholder={'이름을 작성해주세요'}
+          value={name}
+          onChangeText={setName}
           style={{
-            flex: 1,
-            alignItems: 'center',
+            fontSize: 30,
+            marginHorizontal: 15,
+            borderBottomWidth: 1,
+            borderColor: 'gray',
           }}
-        >
-          <TextInput
-            placeholder={'이름을 작성해주세요'}
-            value={name}
-            onChangeText={setName}
-            style={{
-              fontSize: 30,
-              marginHorizontal: 15,
-              borderBottomWidth: 1,
-              borderColor: 'gray',
-            }}
-          />
-        </View>
-
-        <TouchableOpacity onPress={goNext} disabled={name === ''}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 15,
-              borderColor: Colors.M3,
-              borderWidth: 1,
-              marginHorizontal: 50,
-              marginBottom: 120,
-            }}
+        />
+      </View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {name ? (
+          <TouchableOpacity
+            style={{ marginHorizontal: 50 }}
+            onPress={goNext}
+            disabled={name === ''}
           >
-            <Text
+            <View
               style={{
-                fontSize: 20,
-                color: Colors.M3,
-                paddingVertical: 10,
+                width: '80%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                borderRadius: 15,
+                borderColor: Colors.M3,
+                borderWidth: 1,
+                paddingHorizontal: 80,
               }}
             >
-              다음
-            </Text>
-            <AntDesign name="arrowright" size={24} color={Colors.M3} />
-          </View>
-        </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: Colors.M3,
+                  paddingVertical: 10,
+                }}
+              >
+                {'다음'}
+              </Text>
+              <AntDesign name="arrowright" size={24} color={Colors.M3} />
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </>
   );
