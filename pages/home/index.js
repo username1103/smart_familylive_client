@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
@@ -8,19 +15,17 @@ import PageName from '../../navs/page-name';
 import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
+
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import CustomHeader from '../../components/custom-header';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: Colors.M2,
-  },
-  header: {
-    width: '100%',
-    height: '1%',
+    backgroundColor: Colors.M1,
   },
   title: {
     width: '100%',
@@ -72,19 +77,14 @@ const styles = StyleSheet.create({
   answer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
-    height: 35,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: Colors.M3,
   },
   answerText: {
-    fontSize: 18,
+    fontSize: 15,
   },
 });
 
 const Dumb = (p) => {
-  const { users, showTestModal } = p;
+  const { users, goQuestion } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -92,17 +92,10 @@ const Dumb = (p) => {
       components={
         <>
           <CustomHeader headerTitle="Home" />
+          <View
+            style={{ borderColor: '#f7bca8', borderBottomWidth: 0.5 }}
+          ></View>
           <View style={styles.container}>
-            <View style={styles.header} />
-            <View style={styles.title}>
-              <Text
-                style={{ marginHorizontal: 15, fontSize: 20, color: 'white' }}
-              >
-                {' '}
-                ☆ 오늘의 질문{'\n'}
-                {'\n'} 이번 여름 휴가는 어디가 좋을까요?
-              </Text>
-            </View>
             {users.map((user) => (
               <View style={styles.elem}>
                 <View style={styles.userInfo}>
@@ -146,20 +139,41 @@ const Dumb = (p) => {
                 )}
               </View>
             ))}
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <TouchableOpacity style={styles.answer} onPress={showTestModal}>
+          </View>
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <TouchableOpacity style={styles.answer} onPress={goQuestion}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: width * 0.9,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: Colors.M4,
+                  borderRadius: 20,
+                  paddingVertical: 10,
+                  alignContent: 'space-between',
+                }}
+              >
                 <View>
-                  <Text style={styles.answerText}>답변하러 가기 →</Text>
+                  <Text style={{ fontSize: 23, color: 'black' }}>
+                    오늘의 질문
+                  </Text>
+
+                  <Text style={{ fontSize: 18, color: 'black' }}>
+                    이번 여름 휴가는 어디가 좋을까요?
+                  </Text>
                 </View>
-              </TouchableOpacity>
-            </View>
+                <View style={{ marginLeft: 20 }}>
+                  <AntDesign name="rightcircleo" size={24} color="black" />
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
         </>
       }
@@ -190,15 +204,15 @@ const Logic = (p) => {
     setUsers(users);
   };
 
-  const showTestModal = () => {
-    navigation.navigate(PageName.TestModal);
+  const goQuestion = () => {
+    navigation.navigate(PageName.Question);
   };
 
   useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
 
   useEffect(() => init(), []);
 
-  return { users, showTestModal };
+  return { users, goQuestion };
 };
 
 let Home = stateful(Dumb, Logic);
