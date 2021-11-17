@@ -10,8 +10,19 @@ export default {
   Home: 'home',
   QuestionList: 'lists',
   Question: 'question',
+  TodayAnswer: 'todayAnswer',
   Shop: 'shop',
   Settings: 'settings',
 
+  Name: 'name',
+  BloodType: 'blood-type',
+  Gender: 'gender',
+  Birthday: 'birthday',
+
+  NotMatch: 'not-match',
+  InsertCode: 'insert-code',
+  ConnectionCode: 'connection-code',
+
+  InitGroup: 'init-group',
   TestModal: 'test-modal',
 };
