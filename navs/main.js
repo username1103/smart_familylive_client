@@ -26,11 +26,7 @@ export default () => {
     <N
       sceneContainerStyle={{ backgroundColor: Colors.M1 }}
       screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.M1,
-          shadowOffset: { width: 0, height: 0 },
-          elevation: 0,
-        },
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: Colors.M1,
           borderTopColor: Colors.M1,
@@ -44,7 +40,6 @@ export default () => {
         name={PageName.Home}
         component={Home}
         options={{
-          headerTitle: 'Home',
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons name="ios-home" size={focusedSize} color={Colors.M2} />
@@ -61,7 +56,6 @@ export default () => {
         name={PageName.QuestionList}
         component={Lists}
         options={{
-          headerTitle: 'Lists',
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons
@@ -82,7 +76,6 @@ export default () => {
         name={PageName.Shop}
         component={Shop}
         options={{
-          headerTitle: 'Shop',
           tabBarIcon: ({ focused }) =>
             focused ? (
               <MaterialCommunityIcons
@@ -103,7 +96,6 @@ export default () => {
         name={PageName.Settings}
         component={Settings}
         options={{
-          headerTitle: 'Settings',
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Fontisto

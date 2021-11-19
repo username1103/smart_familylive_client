@@ -15,9 +15,16 @@ const KakaoSignin = () => {
     let result = JSON.parse(event.nativeEvent.data);
     const accessToken = result.access.token;
     const refreshToken = result.refresh.token;
-
-    await auth.saveTokens({ accessToken, refreshToken });
+    console.log(result);
+    await auth.saveTokens({
+      userId: result.userId,
+      needInit: result.needInit,
+      isMatched: result.isMatched,
+      accessToken,
+      refreshToken,
+    });
   };
+
   return (
     <View style={{ flex: 1 }}>
       <WebView

@@ -4,12 +4,16 @@ import NonModalPages from './non-modal-pages';
 import PageName from './page-name';
 import wrapper from './wrapper';
 import { TestModal } from '../pages/test-modal';
+import KakaoSignin from '../pages/kakao-sign-in';
+import { InitGroup } from '../pages/initGroup';
 
 const RootNav = createStackNavigator();
 
 // Modal warpper
 const wrappedComps = {
   TestModal: wrapper.modalWrap(TestModal),
+  KakaoSignin: wrapper.modalWrap(KakaoSignin),
+  InitGroup: wrapper.modalWrap(InitGroup),
 };
 
 export default () => {
@@ -45,6 +49,8 @@ export default () => {
 
       {/* 모달 목록 */}
       <S name={PageName.TestModal} component={wrappedComps.TestModal} />
+      <S name={PageName.KakaoSignin} component={wrappedComps.KakaoSignin} />
+      <S name={PageName.InitGroup} component={wrappedComps.InitGroup} />
     </N>
   );
 };

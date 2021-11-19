@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const storeRefreshToken = async ({ refreshToken }) => {
@@ -47,13 +48,16 @@ const deleteTokens = async () => {
 const refreshTokens = async ({ addr, refreshToken }) => {
   const result = await axios({
     method: 'post',
-    url: `${addr}/v1/auth/refresh-tokens/`,
+    url: `${addr}/v1/auth/refresh-tokens`,
     data: { refreshToken },
   });
 
   return {
     accessToken: result.data.access.token,
     refreshToken: result.data.refresh.token,
+    userId: result.data.userId,
+    needInit: result.data.needInit,
+    isMatched: result.data.isMatched,
   };
 };
 

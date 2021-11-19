@@ -10,6 +10,7 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
 import colors from '../../styles/colors';
 import PageName from '../../navs/page-name';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const styles = StyleSheet.create({
@@ -108,7 +109,7 @@ const Dumb = (p) => {
           multiline={true}
           style={styles.answerInput}
         />
-        <TouchableOpacity style={styles.goAnswer} onPress={() => {navigation.navigate(PageName.TodayAnswer), {text:text}}}>
+        <TouchableOpacity style={styles.goAnswer} onPress={() => {navigation.navigate(PageName.TodayAnswer)}}>
           <View style={styles.goAnswer}>
             <Text style={{textAlign: 'center', fontWeight: 'bold'}}> 확인 </Text>
           </View>

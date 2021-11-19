@@ -1,29 +1,38 @@
-import React from 'react';
-import { Text, View, Alert, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
-import CustomButton from '../../components/custom-button';
+import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 import stateful from '../../utils/stateful';
 import PageName from '../../navs/page-name';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useGroup } from '../../hooks/group';
+import { useAuth } from '../../hooks/auth';
+import { useUser } from '../../hooks/user';
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 
-import Question from '../question/index';
+import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
+import CustomHeader from '../../components/custom-header';
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: Colors.M2,
-  },
-  header: {
-    width: '100%',
-    height: '1%',
+    backgroundColor: Colors.M1,
   },
   title: {
     width: '100%',
     height: '20%',
     justifyContent: 'center',
-    backgroundColor: '#ffb486',
+    backgroundColor: Colors.M4,
+    borderRadius: 20,
   },
   content: {
     flex: 1,
@@ -39,11 +48,11 @@ const styles = StyleSheet.create({
   },
   elem: {
     width: '100%',
-    height: '16%',
+    height: '12%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderColor: '#eee',
+    borderColor: '#f7bca8',
     borderBottomWidth: 0.5,
     padding: 5,
   },
@@ -57,120 +66,153 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   profile: {
-    width: 75,
-    height: 75,
+    width: 50,
+    height: 50,
     borderRadius: 50,
   },
   name: {
+    fontSize: 15,
     paddingLeft: 10,
   },
   answer: {
-    backgroundColor: "white",
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: '22%',
-    borderRadius: 30,
-    marginTop: 100,
   },
   answerText: {
-    fontSize: 18,
-  }
+    fontSize: 15,
+  },
 });
 
-const Dumb = ({ showTestModal }) => {
-  const navigation = useNavigation();
+const Dumb = (p) => {
+  const { users, goQuestion } = p;
+
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.header} />
-        <Text style={{ fontSize: 15, color: 'white' }}>
-          {'공지 >> 11월 질문 업데이트 완료'}
-        </Text>
-        <View style={styles.title}>
-          <Text style={{ fontSize: 20, color: 'white' }}>
-            {' '}
-            ☆ 오늘의 질문{'\n'}
-            {'\n'} 이번 여름 휴가는 어디가 좋을까요?
-          </Text>
-        </View>
+    <SafeAreaPlatfrom
+      backgroundColor={Colors.M1}
+      components={
+        <>
+          <CustomHeader headerTitle="Home" />
+          <View
+            style={{ borderColor: '#f7bca8', borderBottomWidth: 0.5 }}
+          ></View>
+          <View style={styles.container}>
+            {users.map((user) => (
+              <View style={styles.elem}>
+                <View style={styles.userInfo}>
+                  <View style={styles.profile}>
+                    {user.thumbnail !== '' ? (
+                      <Image
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          resizeMode: 'contain',
+                        }}
+                        source={{
+                          uri: user.thumbnail,
+                        }}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: Colors.M1,
+                          borderRadius: 50,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
+                        }}
+                      >
+                        <SimpleLineIcons name="user" size={30} color="black" />
+                      </View>
+                    )}
+                  </View>
+                  <Text style={styles.name}>{user.name}</Text>
+                </View>
+                {user.statusMessage !== '' ? (
+                  <View style={styles.userComment}>
+                    <Text>{user.statusMessage}</Text>
+                  </View>
+                ) : (
+                  <></>
+                )}
+              </View>
+            ))}
+          </View>
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <TouchableOpacity style={styles.answer} onPress={goQuestion}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: width * 0.9,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: Colors.M4,
+                  borderRadius: 20,
+                  paddingVertical: 10,
+                  alignContent: 'space-between',
+                }}
+              >
+                <View>
+                  <Text style={{ fontSize: 23, color: 'black' }}>
+                    오늘의 질문
+                  </Text>
 
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img1.jpeg')}
-              />
-            </View>
-            <Text style={styles.name}>뽀로로</Text>
+                  <Text style={{ fontSize: 18, color: 'black' }}>
+                    이번 여름 휴가는 어디가 좋을까요?
+                  </Text>
+                </View>
+                <View style={{ marginLeft: 20 }}>
+                  <AntDesign name="rightcircleo" size={24} color="black" />
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
-          <View style={styles.userComment}>
-            <Text>호기심이 많은 꼬마 펭귄</Text>
-          </View>
-        </View>
-
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img2.jpeg')}
-              />
-            </View>
-            <Text style={styles.name}>크롱</Text>
-          </View>
-          <View style={styles.userComment}>
-            <Text>재롱둥이 아기 공룡</Text>
-          </View>
-        </View>
-
-        <View style={styles.elem}>
-          <View style={styles.userInfo}>
-            <View style={styles.profile}>
-              <Image
-                style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
-                source={require('../../assets/img3.jpeg')}
-              />
-            </View>
-            <Text style={styles.name}>루피</Text>
-          </View>
-          <View style={styles.userComment}>
-            <Text>다정한 꼬마 비버</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.answer} onPress={showTestModal}>
-        <View>
-           <Text style={styles.answerText}>답변하러 가기 →</Text>
-        </View>
-        </TouchableOpacity>
-
-      </View>
-    </>
+        </>
+      }
+    />
   );
 };
 
-const Logic = () => {
+const Logic = (p) => {
   const navigation = useNavigation();
+  const groupHook = useGroup();
+  const authHook = useAuth();
+  const userHook = useUser();
 
-  const showTestModal = () => {
-    navigation.navigate(PageName.TestModal);
+  const [users, setUsers] = useState([]);
+
+  const init = async () => {
+    const { groupId } = await userHook.getUserGroup({
+      userId: authHook.userId,
+    });
+
+    const { groupMembers } = await groupHook.getMembers({ groupId });
+
+    const users = await Promise.all(
+      groupMembers.map((groupMember) =>
+        userHook.get({ userId: groupMember.user })
+      )
+    );
+    setUsers(users);
   };
 
-  const goAlert = () =>
-    Alert.alert('오늘의 질문', '이번 생일에 받고싶은 선물은?', [
-      {
-        text: 'OK',
-        onPress: () => console.log('OK Pressed'),
-        style: 'cancel',
-      },
-    ]);
-
-  return {
-    showTestModal,
-    goAlert,
+  const goQuestion = () => {
+    navigation.navigate(PageName.Question);
   };
+
+  useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
+
+  useEffect(() => init(), []);
+
+  return { users, goQuestion };
 };
 
 let Home = stateful(Dumb, Logic);

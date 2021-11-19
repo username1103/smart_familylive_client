@@ -26,36 +26,45 @@ const baseCall = axios.create({
 });
 
 baseCall.interceptors.request.use(async (config) => {
-  config.headers.Authorization = attachBearer(
-    (await tokens.loadAccessToken()).accessToken
-  );
+  const { accessToken } = await tokens.loadAccessToken();
+  config.headers.Authorization = attachBearer(accessToken);
   return config;
 });
 
-baseCall.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error) => {
-    const originalRequest = error.config;
+export const createAuthedAxios = ({ state, setState }) => {
+  if (state.status !== 'authed') {
+    return axios;
+  }
 
-    if (isTokenError(error)) {
-      try {
+  const authedAxios = async (options) => {
+    try {
+      return await baseCall(options);
+    } catch (error) {
+      const originalRequest = error.config;
+
+      if (isTokenError(error)) {
         let metadata;
 
         if (!isRefreshingTokens) {
           isRefreshingTokens = true;
 
-          metadata = await tokens.refreshTokens({
-            addr: config.apiAddr,
-            refreshToken: (await tokens.loadRefreshToken()).refreshToken,
-          });
+          try {
+            metadata = await tokens.refreshTokens({
+              addr: config.apiAddr,
+              refreshToken: (await tokens.loadRefreshToken()).refreshToken,
+            });
 
-          await storeTokens({
-            refreshToken: metadata.refreshToken,
-            accessToken: metadata.accessToken,
-          });
-          isRefreshingTokens = false;
+            await tokens.storeTokens({
+              refreshToken: metadata.refreshToken,
+              accessToken: metadata.accessToken,
+            });
+            isRefreshingTokens = false;
+          } catch (err) {
+            isRefreshingTokens = false;
+            setState({ status: 'not-authed' });
+            await tokens.deleteTokens();
+            throw err;
+          }
 
           const result = await baseCall(options);
 
@@ -72,31 +81,9 @@ baseCall.interceptors.response.use(
         });
 
         return retryOriginalRequest;
-      } catch (err) {
-        isRefreshingTokens = false;
-        await tokens.deleteTokens();
-        throw err;
+      } else {
+        throw error;
       }
-    } else {
-      throw error;
-    }
-  }
-);
-
-export const createAuthedAxios = ({ state, setState }) => {
-  if (state.status !== 'authed') {
-    return axios;
-  }
-
-  const authedAxios = async (options) => {
-    try {
-      return baseCall(options);
-    } catch (err) {
-      if (isTokenError(err)) {
-        setState({ status: 'not-authed' });
-      }
-
-      throw err;
     }
   };
 
