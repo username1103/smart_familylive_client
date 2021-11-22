@@ -1,11 +1,25 @@
-import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import CustomHeader from '../../components/custom-header';
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import Colors from '../../styles/colors';
 import stateful from '../../utils/stateful';
 import colors from '../../styles/colors';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useGroup } from '../../hooks/group';
+import { useUser } from '../../hooks/user';
+import { useAuth } from '../../hooks/auth';
+import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
+import { useNavigation } from '@react-navigation/native';
+import PageName from '../../navs/page-name';
+
+const _width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +34,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 25,
     paddingHorizontal: 20,
+    width: _width * 0.9,
   },
   listText: {
     fontSize: 16,
@@ -45,10 +60,15 @@ const Dumb = (p) => {
           >
             <View style={styles.container}>
               <ScrollView showsVerticalScrollIndicator={false}>
-                {questions.map((question) => (
-                  <TouchableOpacity style={styles.questionLists}>
+                {questions.map((question, idx) => (
+                  <TouchableOpacity
+                    style={styles.questionLists}
+                    onPress={question.onPress}
+                  >
                     <View>
-                      <Text style={styles.listText}>{question}</Text>
+                      <Text style={styles.listText}>{`#${
+                        questions.length - idx
+                      }. ${question.contents}`}</Text>
                     </View>
                   </TouchableOpacity>
                 ))}
@@ -62,16 +82,48 @@ const Dumb = (p) => {
 };
 
 const Logic = () => {
-  const questions = [
-    '#8. 이번 여름 휴가는 어디가 좋을까요?',
-    '#7. 가족과 함께 했던 가장 재미있던 일은 무엇인가요?',
-    '#6. 이번 겨울에 놀러가고 싶은 곳이 있을까요?',
-    '#5. 나의 좌우명은 무엇인가요?',
-    '#4. 요즘 생각나는 노래가 있나요?',
-    '#3. 최근 가장 재미있게 봤던 영화는 무엇인가요?',
-    '#2. 제일 좋아하는 음식은 무엇인가요?',
-    '#1. 이번 생일에 받고 싶은 선물이 있을까요?',
-  ];
+  const navigation = useNavigation();
+  const authHook = useAuth();
+  const groupHook = useGroup();
+  const userHook = useUser();
+
+  const [questions, setQuestions] = useState([]);
+  const init = async () => {
+    const { groupId } = await userHook.getUserGroup({
+      userId: authHook.userId,
+    });
+
+    const { groupQuestions } = await groupHook.getQuestions({ groupId });
+
+    const questions = [];
+    await groupQuestions.reduce(async (prevPromise, question) => {
+      await prevPromise;
+      let data;
+      if (question.questionType === 'normal') {
+        data = await groupHook.getQuestion({
+          questionId: question.question,
+        });
+      } else {
+        data = await groupHook.getCustomQuestion({
+          customQuestionid: question.question,
+        });
+      }
+      questions.push({
+        ...data,
+        onPress: () =>
+          navigation.navigate(PageName.Question, {
+            groupQuestionId: question,
+          }),
+      });
+    }, Promise.resolve());
+
+    setQuestions(questions);
+  };
+
+  useEffect(() => init(), []);
+
+  useRefreshOnFocus({ isInitialized: questions !== [], refresh: init });
+
   return { questions };
 };
 

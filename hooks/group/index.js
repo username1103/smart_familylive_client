@@ -41,7 +41,41 @@ export const GroupProvider = ({ children }) => {
       return result.data;
     };
 
-    return { generateCode, get, getMembers };
+    const getQuestions = async ({ groupId }) => {
+      const result = await authHook.authedAxios({
+        method: 'get',
+        url: `${addr}/v1/groups/${groupId}/questions`,
+      });
+
+      return result.data;
+    };
+
+    const getQuestion = async ({ questionId }) => {
+      const result = await authHook.authedAxios({
+        method: 'get',
+        url: `${addr}/v1/questions/${questionId}`,
+      });
+
+      return result.data;
+    };
+
+    const getCustomQuestion = async ({ customQuestionid }) => {
+      const result = await authHook.authedAxios({
+        method: 'get',
+        url: `${addr}/v1/custom-questions/${customQuestionid}`,
+      });
+
+      return result.data;
+    };
+
+    return {
+      generateCode,
+      get,
+      getMembers,
+      getQuestions,
+      getQuestion,
+      getCustomQuestion,
+    };
   };
 
   const [state, setState] = useState(take());
