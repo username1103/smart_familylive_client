@@ -95,8 +95,16 @@ const Logic = () => {
 
     const { groupQuestions } = await groupHook.getQuestions({ groupId });
 
+    const validQuestions = [];
+    for (const question of groupQuestions.reverse()) {
+      validQuestions.push(question);
+      if (!question.allReplied) {
+        break;
+      }
+    }
+
     const questions = [];
-    await groupQuestions.reduce(async (prevPromise, question) => {
+    await validQuestions.reverse().reduce(async (prevPromise, question) => {
       await prevPromise;
       let data;
       if (question.questionType === 'normal') {
