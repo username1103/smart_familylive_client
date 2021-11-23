@@ -92,9 +92,7 @@ const Dumb = (p) => {
       components={
         <>
           <CustomHeader headerTitle="Home" />
-          <View
-            style={{ borderColor: '#f7bca8', borderBottomWidth: 0.5 }}
-          ></View>
+
           <View style={styles.container}>
             {users.map((user) => (
               <View style={styles.elem}>
@@ -218,6 +216,13 @@ const Logic = () => {
       )
     );
 
+    const me = users.filter((user) => user._id === authHook.userId);
+    const familyWithoutMe = users.filter(
+      (user) => user._id !== authHook.userId
+    );
+
+    const setOrderUsers = [...me, ...familyWithoutMe];
+
     const { groupQuestions } = await groupHook.getQuestions({ groupId });
 
     let homeGroupQuestion;
@@ -243,7 +248,7 @@ const Logic = () => {
 
     setGroupQuestion(homeGroupQuestion);
     setQuestion(homeQuestion);
-    setUsers(users);
+    setUsers(setOrderUsers);
   };
 
   const goQuestion = () => {
