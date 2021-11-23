@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { users, goQuestion, question } = p;
+  const { users, goQuestion, question, questionNum } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -171,7 +171,7 @@ const Dumb = (p) => {
                     </Text>
 
                     <Text style={{ fontSize: 0.04 * width, color: 'black' }}>
-                      {question.contents}
+                      {`#${questionNum} ${question.contents}`}
                     </Text>
                   </View>
                   <View
@@ -200,6 +200,7 @@ const Logic = () => {
   const userHook = useUser();
 
   const [question, setQuestion] = useState();
+  const [questionNum, setQuestionNum] = useState(0);
   const [groupQuestion, setGroupQuestion] = useState();
   const [users, setUsers] = useState([]);
 
@@ -227,9 +228,10 @@ const Logic = () => {
 
     let homeGroupQuestion;
 
-    for (const question of groupQuestions) {
+    for (const [idx, question] of groupQuestions.entries()) {
       if (!question.allReplied) {
         homeGroupQuestion = question;
+        setQuestionNum(groupQuestions.length - idx);
       }
     }
 
@@ -253,13 +255,15 @@ const Logic = () => {
 
   const goQuestion = () => {
     navigation.navigate(PageName.Question, {
-      groupQuestionId: groupQuestion.id,
+      groupQuestion,
+      questionNum,
+      question,
     });
   };
 
   useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
 
-  return { users, goQuestion, question };
+  return { users, goQuestion, question, questionNum };
 };
 
 let Home = stateful(Dumb, Logic);

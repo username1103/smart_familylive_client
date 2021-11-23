@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
 import CustomHeader from '../../components/custom-header';
@@ -8,7 +8,6 @@ import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
-import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 
 const styles = StyleSheet.create({
@@ -32,44 +31,26 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   answer: {
-    height: 50,
-    marginLeft: 30,
-    borderLeftColor: Colors.M4,
-    borderLeftWidth: 1.5,
+    flex: 1,
+    margin: 15,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   answerText: {
-    marginLeft: 3,
-    fontSize: 10,
+    fontSize: 15,
     color: 'black',
-    textAlign: 'center',
   },
   elem: {
-    flex: 1,
-    width: '100%',
-    height: '30%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderColor: '#f7bca8',
-    borderBottomWidth: 0.5,
-    padding: 5,
     paddingVertical: 20,
+    marginHorizontal: 5,
   },
   userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    margin: 5,
+    justifyContent: 'center',
   },
   userComment: {
     padding: 8,
     backgroundColor: 'yellow',
     borderRadius: 5,
-  },
-  profile: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
   },
   name: {
     fontSize: 15,
@@ -78,68 +59,35 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { users, answers } = p;
+  const { answers, question, questionNum } = p;
 
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
       components={
         <>
-          <CustomHeader headerTitle="오늘의 질문답변" />
+          <CustomHeader headerTitle="Question" />
 
           <View style={styles.container}>
             <View style={styles.question}>
-              <Text style={styles.questionText}>
-                {' '}
-                8. 이번 여름 휴가는 어디가 좋을까요?{' '}
-              </Text>
+              <Text
+                style={styles.questionText}
+              >{`#${questionNum} ${question.contents}`}</Text>
             </View>
-            <ScrollView>
-              {users.map((user) => (
+            <ScrollView style={{ flex: 1 }}>
+              {answers.map((answer) => (
                 <View style={styles.elem}>
                   <View style={styles.userInfo}>
-                    <View style={styles.profile}>
-                      {user.thumbnail !== '' ? (
-                        <Image
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                            resizeMode: 'contain',
-                          }}
-                          source={{
-                            uri: user.thumbnail,
-                          }}
-                        />
-                      ) : (
-                        <View
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: Colors.M1,
-                            borderRadius: 50,
-                            borderWidth: 0.3,
-                            borderColor: Colors.DISABLE,
-                          }}
-                        >
-                          <SimpleLineIcons
-                            name="user"
-                            size={30}
-                            color="black"
-                          />
-                        </View>
-                      )}
-                    </View>
-                    <Text style={styles.name}>{user.name}</Text>
+                    <Text style={styles.name}>{answer.name}</Text>
                   </View>
-                  <ScrollView>
-                    {answers.map((answer) => (
-                      <View style={styles.answer}>
-                        <Text style={styles.answerText}>{answer}</Text>
-                      </View>
-                    ))}
-                  </ScrollView>
+
+                  <View style={styles.answer}>
+                    <Text style={styles.answerText}>
+                      {answer.answer?.contetns
+                        ? answer.answer?.contetns
+                        : '아직 입력되지 않았어요'}
+                    </Text>
+                  </View>
                 </View>
               ))}
             </ScrollView>
@@ -151,16 +99,13 @@ const Dumb = (p) => {
 };
 
 const Logic = (p) => {
-  const { groupQuestionId } = p.route.params;
-
-  const answers = ['오사카 갈래,,,'];
+  const { groupQuestion, questionNum, question } = p.route.params;
 
   const groupHook = useGroup();
   const authHook = useAuth();
   const userHook = useUser();
 
-  const [question, setQuestion] = useState(null);
-  const [users, setUsers] = useState([]);
+  const [answers, setAnswers] = useState([]);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -175,15 +120,31 @@ const Logic = (p) => {
       )
     );
 
-    setUsers(users);
+    const me = users.filter((user) => user._id === authHook.userId);
+    const familyWithoutMe = users.filter(
+      (user) => user._id !== authHook.userId
+    );
+
+    const setOrderUsers = [...me, ...familyWithoutMe];
+    const userAnswers = setOrderUsers.map((user) => {
+      const [userAnswer] = groupQuestion.answers.filter(
+        (answer) => answer.author === user._id
+      );
+      if (userAnswer) {
+        user.answer = userAnswer;
+      }
+      return user;
+    });
+
+    setAnswers(userAnswers);
   };
 
-  useEffect(() => init(), []);
+  useRefreshOnFocus({ isInitialized: answers !== [], refresh: init });
 
-  return { users, answers, question };
+  return { answers, question, questionNum };
 };
 
-let TodayAnswer = stateful(Dumb, Logic);
-TodayAnswer.displayName = 'TodayAnswer';
+let Question = stateful(Dumb, Logic);
+Question.displayName = 'Question';
 
-export default TodayAnswer;
+export default Question;

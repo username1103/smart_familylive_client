@@ -88,6 +88,7 @@ const Logic = () => {
   const userHook = useUser();
 
   const [questions, setQuestions] = useState([]);
+
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
       userId: authHook.userId,
@@ -104,26 +105,30 @@ const Logic = () => {
     }
 
     const questions = [];
-    await validQuestions.reverse().reduce(async (prevPromise, question) => {
-      await prevPromise;
-      let data;
-      if (question.questionType === 'normal') {
-        data = await groupHook.getQuestion({
-          questionId: question.question,
+    await validQuestions
+      .reverse()
+      .reduce(async (prevPromise, question, idx) => {
+        await prevPromise;
+        let data;
+        if (question.questionType === 'normal') {
+          data = await groupHook.getQuestion({
+            questionId: question.question,
+          });
+        } else {
+          data = await groupHook.getCustomQuestion({
+            customQuestionid: question.question,
+          });
+        }
+        questions.push({
+          ...data,
+          onPress: () =>
+            navigation.navigate(PageName.Question, {
+              groupQuestion: question,
+              question: data,
+              questionNum: idx + 1,
+            }),
         });
-      } else {
-        data = await groupHook.getCustomQuestion({
-          customQuestionid: question.question,
-        });
-      }
-      questions.push({
-        ...data,
-        onPress: () =>
-          navigation.navigate(PageName.Question, {
-            groupQuestionId: question,
-          }),
-      });
-    }, Promise.resolve());
+      }, Promise.resolve());
 
     setQuestions(questions);
   };
