@@ -128,8 +128,6 @@ const Logic = () => {
     setQuestions(questions);
   };
 
-  useEffect(() => init(), []);
-
   useRefreshOnFocus({ isInitialized: questions !== [], refresh: init });
 
   return { questions };

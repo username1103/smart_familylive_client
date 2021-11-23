@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { users, goQuestion } = p;
+  const { users, goQuestion, question } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -140,53 +140,69 @@ const Dumb = (p) => {
               </View>
             ))}
           </View>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <TouchableOpacity style={styles.answer} onPress={goQuestion}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: width * 0.9,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: Colors.M4,
-                  borderRadius: 20,
-                  paddingVertical: 10,
-                  alignContent: 'space-between',
-                }}
-              >
-                <View>
-                  <Text style={{ fontSize: 23, color: 'black' }}>
-                    오늘의 질문
-                  </Text>
+          {question ? (
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}
+            >
+              <TouchableOpacity style={styles.answer} onPress={goQuestion}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: width * 0.9,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: Colors.M4,
+                    borderRadius: 20,
+                    paddingVertical: 10,
+                    paddingHorizontal: 20,
+                    alignContent: 'space-between',
+                  }}
+                >
+                  <View
+                    style={{
+                      flex: 0.9,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Text style={{ fontSize: 0.05 * width, color: 'black' }}>
+                      오늘의 질문
+                    </Text>
 
-                  <Text style={{ fontSize: 18, color: 'black' }}>
-                    이번 여름 휴가는 어디가 좋을까요?
-                  </Text>
+                    <Text style={{ fontSize: 0.04 * width, color: 'black' }}>
+                      {question.contents}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 0.1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <AntDesign name="rightcircleo" size={24} color="black" />
+                  </View>
                 </View>
-                <View style={{ marginLeft: 20 }}>
-                  <AntDesign name="rightcircleo" size={24} color="black" />
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </>
       }
     />
   );
 };
 
-const Logic = (p) => {
+const Logic = () => {
   const navigation = useNavigation();
   const groupHook = useGroup();
   const authHook = useAuth();
   const userHook = useUser();
 
+  const [question, setQuestion] = useState();
+  const [groupQuestion, setGroupQuestion] = useState();
   const [users, setUsers] = useState([]);
 
   const init = async () => {
@@ -201,18 +217,44 @@ const Logic = (p) => {
         userHook.get({ userId: groupMember.user })
       )
     );
+
+    const { groupQuestions } = await groupHook.getQuestions({ groupId });
+
+    let homeGroupQuestion;
+
+    for (const question of groupQuestions) {
+      if (!question.allReplied) {
+        homeGroupQuestion = question;
+      }
+    }
+
+    let homeQuestion;
+    if (homeGroupQuestion) {
+      if (homeGroupQuestion.questionType === 'normal') {
+        homeQuestion = await groupHook.getQuestion({
+          questionId: homeGroupQuestion.question,
+        });
+      } else {
+        homeQuestion = await groupHook.getCustomQuestion({
+          customQuestionid: homeGroupQuestion.question,
+        });
+      }
+    }
+
+    setGroupQuestion(homeGroupQuestion);
+    setQuestion(homeQuestion);
     setUsers(users);
   };
 
   const goQuestion = () => {
-    navigation.navigate(PageName.Question);
+    navigation.navigate(PageName.Question, {
+      groupQuestionId: groupQuestion.id,
+    });
   };
 
   useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
 
-  useEffect(() => init(), []);
-
-  return { users, goQuestion };
+  return { users, goQuestion, question };
 };
 
 let Home = stateful(Dumb, Logic);

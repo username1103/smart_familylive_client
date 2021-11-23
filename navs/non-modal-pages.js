@@ -15,8 +15,8 @@ import Name from '../pages/name';
 import ConnectionCode from '../pages/connetion-code';
 import NotMatch from '../pages/not-match';
 import InsertCode from '../pages/insert-code';
+import ReplyQuestion from '../pages/reply-question';
 import Question from '../pages/question';
-import TodayAnswer from '../pages/todayAnswer';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -35,8 +35,8 @@ const wrappedComps = {
   InsertCode: wrapper.commonWrap(InsertCode),
   ConnectionCode: wrapper.commonWrap(ConnectionCode),
 
+  ReplyQuestion: wrapper.commonWrap(ReplyQuestion),
   Question: wrapper.commonWrap(Question),
-  TodayAnswer: wrapper.commonWrap(TodayAnswer),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -101,8 +101,8 @@ export default () => {
         component={wrappedComps.ConnectionCode}
       />
 
+      <S name={PageName.ReplyQuestion} component={wrappedComps.ReplyQuestion} />
       <S name={PageName.Question} component={wrappedComps.Question} />
-      <S name={PageName.TodayAnswer} component={wrappedComps.TodayAnswer} />
     </N>
   );
 };

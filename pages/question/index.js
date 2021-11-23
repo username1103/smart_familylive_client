@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
-import colors from '../../styles/colors';
-import PageName from '../../navs/page-name';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Colors from '../../styles/colors';
+import CustomHeader from '../../components/custom-header';
+import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
+import { useGroup } from '../../hooks/group';
+import { useAuth } from '../../hooks/auth';
+import { useUser } from '../../hooks/user';
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
+import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: colors.M1,
-    alignItems: 'flex-end',
+    backgroundColor: Colors.M1,
   },
   question: {
     borderRadius: 10,
     backgroundColor: '#ffb486',
     marginTop: 10,
     paddingVertical: 25,
-    paddingHorizontal: 25,
-    alignSelf: "stretch",
+    paddingHorizontal: 20,
+    alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -34,100 +31,159 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
   },
-  answerInput: {
-    borderRadius: 10,
-    backgroundColor: 'white',
-    marginTop: 10,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    alignSelf: "stretch",
-  },
-  answerText: {
-    fontSize: 16,
-    color: 'black',
-  },
-  goAnswer: {
-    paddingVertical: 3,
-    paddingHorizontal: 5,
-    borderRadius: 20,
-    backgroundColor: 'white',
-    marginTop: 5,
+  answer: {
+    height: 50,
+    marginLeft: 30,
+    borderLeftColor: Colors.M4,
+    borderLeftWidth: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
-   }
+  },
+  answerText: {
+    marginLeft: 3,
+    fontSize: 10,
+    color: 'black',
+    textAlign: 'center',
+  },
+  elem: {
+    flex: 1,
+    width: '100%',
+    height: '30%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderColor: '#f7bca8',
+    borderBottomWidth: 0.5,
+    padding: 5,
+    paddingVertical: 20,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userComment: {
+    padding: 8,
+    backgroundColor: 'yellow',
+    borderRadius: 5,
+  },
+  profile: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  name: {
+    fontSize: 15,
+    paddingLeft: 10,
+  },
 });
 
-const STORAGE_KEY = '@answer';
-
 const Dumb = (p) => {
-  const { goTodayAnswer } = p;
-  const navigation = useNavigation();
-
-  const [working, setWorking] = useState(true);
-  const [text, setText] = useState('');
-  const [answer, setAnswer] = useState({});
-  useEffect(() => {
-    loadAnswer();
-  }, []);
-  const work = () => setWorking(true);
-  const onChangeText = (payload) => setText(payload);
-  const saveAnswer = async (toSave) => {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-  };
-  const loadAnswer = async () => {
-    const s = await AsyncStorage.getItem(STORAGE_KEY);
-    setAnswer(JSON.parse(s));
-  };
-  const addAnswer = async () => {
-    if (text === '') {
-      return;
-    }
-    const newAnswer = {
-      ...answer,
-      [Date.now()]: { text, working },
-    };
-    setAnswer(newAnswer);
-    await saveAnswer(newAnswer);
-    setAnswer('');
-  };
+  const { users, answers } = p;
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.question}>
-          <Text style={styles.questionText}>
-            {' '}
-            8. 이번 여름 휴가는 어디가 좋을까요?{' '}
-          </Text>
-        </View>
-        <TextInput
-          onSubmitEditing={addAnswer}
-          onChangeText={onChangeText}
-          returnKeyType="done"
-          value={text}
-          placeholder={'답변을 작성해주세요.'}
-          multiline={true}
-          style={styles.answerInput}
-        />
-        <TouchableOpacity style={styles.goAnswer} onPress={() => {navigation.navigate(PageName.TodayAnswer)}}>
-          <View style={styles.goAnswer}>
-            <Text style={{textAlign: 'center', fontWeight: 'bold'}}> 확인 </Text>
+    <SafeAreaPlatfrom
+      backgroundColor={Colors.M1}
+      components={
+        <>
+          <CustomHeader headerTitle="오늘의 질문답변" />
+
+          <View style={styles.container}>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                {' '}
+                8. 이번 여름 휴가는 어디가 좋을까요?{' '}
+              </Text>
+            </View>
+            <ScrollView>
+              {users.map((user) => (
+                <View style={styles.elem}>
+                  <View style={styles.userInfo}>
+                    <View style={styles.profile}>
+                      {user.thumbnail !== '' ? (
+                        <Image
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            resizeMode: 'contain',
+                          }}
+                          source={{
+                            uri: user.thumbnail,
+                          }}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: Colors.M1,
+                            borderRadius: 50,
+                            borderWidth: 0.3,
+                            borderColor: Colors.DISABLE,
+                          }}
+                        >
+                          <SimpleLineIcons
+                            name="user"
+                            size={30}
+                            color="black"
+                          />
+                        </View>
+                      )}
+                    </View>
+                    <Text style={styles.name}>{user.name}</Text>
+                  </View>
+                  <ScrollView>
+                    {answers.map((answer) => (
+                      <View style={styles.answer}>
+                        <Text style={styles.answerText}>{answer}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
+              ))}
+            </ScrollView>
           </View>
-        </TouchableOpacity>
-      </View>
-    </>
+        </>
+      }
+    />
   );
 };
 
 const Logic = (p) => {
-  const navigation = useNavigation();
-  const goTodayAnswer = () => {
-    navigation.navigate(PageName.TodayAnswer);
+  const { groupQuestionId } = p.route.params;
+
+  const answers = ['오사카 갈래,,,'];
+
+  const groupHook = useGroup();
+  const authHook = useAuth();
+  const userHook = useUser();
+
+  const [question, setQuestion] = useState(null);
+  const [users, setUsers] = useState([]);
+
+  const init = async () => {
+    const { groupId } = await userHook.getUserGroup({
+      userId: authHook.userId,
+    });
+
+    const { groupMembers } = await groupHook.getMembers({ groupId });
+
+    const users = await Promise.all(
+      groupMembers.map((groupMember) =>
+        userHook.get({ userId: groupMember.user })
+      )
+    );
+
+    setUsers(users);
   };
-  return {};
+
+  useEffect(() => init(), []);
+
+  return { users, answers, question };
 };
 
-let QNA = stateful(Dumb, Logic);
-QNA.displayName = 'Q&A';
+let TodayAnswer = stateful(Dumb, Logic);
+TodayAnswer.displayName = 'TodayAnswer';
 
-export default QNA;
+export default TodayAnswer;
