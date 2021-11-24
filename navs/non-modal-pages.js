@@ -17,6 +17,7 @@ import NotMatch from '../pages/not-match';
 import InsertCode from '../pages/insert-code';
 import ReplyQuestion from '../pages/reply-question';
 import Question from '../pages/question';
+import GoAnswer from '../pages/goAnswer';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -37,6 +38,7 @@ const wrappedComps = {
 
   ReplyQuestion: wrapper.commonWrap(ReplyQuestion),
   Question: wrapper.commonWrap(Question),
+  GoAnswer: wrapper.commonWrap(GoAnswer),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -103,6 +105,7 @@ export default () => {
 
       <S name={PageName.ReplyQuestion} component={wrappedComps.ReplyQuestion} />
       <S name={PageName.Question} component={wrappedComps.Question} />
+      <S name={PageName.GoAnswer} component={wrappedComps.GoAnswer} />
     </N>
   );
 };

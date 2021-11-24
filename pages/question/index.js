@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet,TouchableOpacity, Modal, TextInput,Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
@@ -9,6 +9,9 @@ import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
+import { useNavigation } from '@react-navigation/native';
+import PageName from '../../navs/page-name';
+import goAnswer from '../goAnswer';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,7 +62,8 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { answers, question, questionNum } = p;
+  const { answers, question, questionNum, goAnswer } = p;
+  const navigation = useNavigation();
 
   return (
     <SafeAreaPlatfrom
@@ -81,6 +85,13 @@ const Dumb = (p) => {
                     <Text style={styles.name}>{answer.name}</Text>
                   </View>
 
+                  <TouchableOpacity 
+                    onPress={() => Alert.alert ( null, "작성하시겠습니까?", [
+                      { text: "아니요", onPress: () => console.log('no'), style: "cancel"},
+                      { text: "예", onPress:() => navigation.navigate(PageName.GoAnswer)},
+                      ], { cancelable: false } 
+                    )}
+                  >
                   <View style={styles.answer}>
                     <Text style={styles.answerText}>
                       {answer.answer?.contetns
@@ -88,6 +99,7 @@ const Dumb = (p) => {
                         : '아직 입력되지 않았어요'}
                     </Text>
                   </View>
+                  </TouchableOpacity>
                 </View>
               ))}
             </ScrollView>
@@ -100,6 +112,11 @@ const Dumb = (p) => {
 
 const Logic = (p) => {
   const { groupQuestion, questionNum, question } = p.route.params;
+
+  const navigation = useNavigation();
+  const goAnswer = () => {
+    navigation.navigate(PageName.GoAnswer);
+  };
 
   const groupHook = useGroup();
   const authHook = useAuth();
@@ -141,7 +158,7 @@ const Logic = (p) => {
 
   useRefreshOnFocus({ isInitialized: answers !== [], refresh: init });
 
-  return { answers, question, questionNum };
+  return { answers, question, questionNum, goAnswer };
 };
 
 let Question = stateful(Dumb, Logic);
