@@ -9,6 +9,7 @@ import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,14 +60,18 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { answers, question, questionNum } = p;
+  const { answers, question, questionNum, goback } = p;
 
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
       components={
         <>
-          <CustomHeader headerTitle="Question" />
+          <CustomHeader
+            headerTitle="Question"
+            backButton={true}
+            goback={goback}
+          />
 
           <View style={styles.container}>
             <View style={styles.question}>
@@ -101,6 +106,7 @@ const Dumb = (p) => {
 const Logic = (p) => {
   const { groupQuestion, questionNum, question } = p.route.params;
 
+  const navigation = useNavigation();
   const groupHook = useGroup();
   const authHook = useAuth();
   const userHook = useUser();
@@ -139,9 +145,13 @@ const Logic = (p) => {
     setAnswers(userAnswers);
   };
 
+  const goback = () => {
+    navigation.goBack();
+  };
+
   useRefreshOnFocus({ isInitialized: answers !== [], refresh: init });
 
-  return { answers, question, questionNum };
+  return { answers, question, questionNum, goback };
 };
 
 let Question = stateful(Dumb, Logic);
