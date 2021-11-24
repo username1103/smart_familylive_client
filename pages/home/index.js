@@ -15,7 +15,7 @@ import PageName from '../../navs/page-name';
 import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
-import { SimpleLineIcons, AntDesign } from '@expo/vector-icons';
+import { SimpleLineIcons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import CustomHeader from '../../components/custom-header';
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.M1,
+    marginHorizontal: 15,
   },
   title: {
     width: '100%',
@@ -47,31 +48,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#1ad657',
   },
   elem: {
-    width: '100%',
     height: '12%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderColor: '#f7bca8',
     borderBottomWidth: 0.5,
-    padding: 5,
   },
   userInfo: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
   userComment: {
-    padding: 8,
-    backgroundColor: 'yellow',
+    padding: 5,
+    backgroundColor: Colors.M4,
     borderRadius: 5,
   },
   profile: {
     width: 50,
     height: 50,
-    borderRadius: 50,
   },
   name: {
-    fontSize: 15,
+    fontSize: 16,
     paddingLeft: 10,
   },
   answer: {
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { users, goQuestion, question, questionNum } = p;
+  const { goQuestion, question, questionNum, familyinfo, myinfo } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -92,49 +91,126 @@ const Dumb = (p) => {
       components={
         <>
           <CustomHeader headerTitle="Home" />
-
           <View style={styles.container}>
-            {users.map((user) => (
-              <View style={styles.elem}>
-                <View style={styles.userInfo}>
-                  <View style={styles.profile}>
-                    {user.thumbnail !== '' ? (
-                      <Image
-                        style={{
-                          height: '100%',
-                          width: '100%',
-                          resizeMode: 'contain',
-                        }}
-                        source={{
-                          uri: user.thumbnail,
-                        }}
-                      />
-                    ) : (
-                      <View
-                        style={{
-                          height: '100%',
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: Colors.M1,
-                          borderRadius: 50,
-                          borderWidth: 0.3,
-                          borderColor: Colors.DISABLE,
-                        }}
-                      >
-                        <SimpleLineIcons name="user" size={30} color="black" />
-                      </View>
-                    )}
-                  </View>
-                  <Text style={styles.name}>{user.name}</Text>
-                </View>
-                {user.statusMessage !== '' ? (
-                  <View style={styles.userComment}>
-                    <Text>{user.statusMessage}</Text>
-                  </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: '13%',
+                borderBottomColor: Colors.M2,
+                borderBottomWidth: 0.3,
+              }}
+            >
+              <View>
+                {myinfo.thumbnail !== '' ? (
+                  <Image
+                    style={{
+                      width: 45,
+                      height: 45,
+                      resizeMode: 'contain',
+                    }}
+                    source={{
+                      uri: myinfo.thumbnail,
+                    }}
+                  />
                 ) : (
-                  <></>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: 5,
+                      backgroundColor: Colors.M1,
+                      borderRadius: 15,
+                      borderWidth: 0.3,
+                      borderColor: Colors.DISABLE,
+                    }}
+                  >
+                    <SimpleLineIcons name="user" size={45} color="black" />
+                  </View>
                 )}
+              </View>
+              <View style={{ flex: 1, marginLeft: 10 }}>
+                <Text style={{ fontSize: 17 }}>{myinfo.name}</Text>
+                {myinfo.statusMessage !== '' ? (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginTop: 3,
+                      color: Colors.DISABLE,
+                    }}
+                  >
+                    {myinfo.statusMessage}
+                  </Text>
+                ) : null}
+              </View>
+              <TouchableOpacity>
+                <FontAwesome5 name="user-edit" size={24} color={Colors.M4} />
+              </TouchableOpacity>
+            </View>
+
+            {familyinfo.map((user) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: '11%',
+                  borderBottomColor: Colors.M2,
+                  borderBottomWidth: 0.3,
+                }}
+              >
+                <View>
+                  {myinfo.thumbnail !== '' ? (
+                    <Image
+                      style={{
+                        width: 40,
+                        height: 40,
+                        resizeMode: 'contain',
+                      }}
+                      source={{
+                        uri: user.thumbnail,
+                      }}
+                    />
+                  ) : (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 5,
+                        backgroundColor: Colors.M1,
+                        borderRadius: 15,
+                        borderWidth: 0.3,
+                        borderColor: Colors.DISABLE,
+                      }}
+                    >
+                      <SimpleLineIcons name="user" size={40} color="black" />
+                    </View>
+                  )}
+                </View>
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <Text style={{ fontSize: 15 }}>{user.name}</Text>
+                  {user.statusMessage !== '' ? (
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        marginTop: 3,
+                        color: Colors.DISABLE,
+                      }}
+                    >
+                      {user.statusMessage}
+                    </Text>
+                  ) : null}
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      borderBottomColor: Colors.DISABLE,
+                      borderBottomWidth: 0.5,
+                    }}
+                    onPress={user.onClick}
+                  >
+                    <Text style={{ color: Colors.DISABLE }}>콕 찌르기</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))}
           </View>
@@ -202,7 +278,8 @@ const Logic = () => {
   const [question, setQuestion] = useState();
   const [questionNum, setQuestionNum] = useState(0);
   const [groupQuestion, setGroupQuestion] = useState();
-  const [users, setUsers] = useState([]);
+  const [myinfo, setMyinfo] = useState({});
+  const [familyinfo, setFamilyinfo] = useState([]);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -218,11 +295,14 @@ const Logic = () => {
     );
 
     const me = users.filter((user) => user._id === authHook.userId);
-    const familyWithoutMe = users.filter(
-      (user) => user._id !== authHook.userId
-    );
-
-    const setOrderUsers = [...me, ...familyWithoutMe];
+    const familyWithoutMe = users
+      .filter((user) => user._id !== authHook.userId)
+      .map((user) => ({
+        ...user,
+        onClick: async () => {
+          await userHook.click({ userId: user._id });
+        },
+      }));
 
     const { groupQuestions } = await groupHook.getQuestions({ groupId });
 
@@ -250,7 +330,9 @@ const Logic = () => {
 
     setGroupQuestion(homeGroupQuestion);
     setQuestion(homeQuestion);
-    setUsers(setOrderUsers);
+
+    setMyinfo(me[0]);
+    setFamilyinfo(familyWithoutMe);
   };
 
   const goQuestion = () => {
@@ -261,9 +343,9 @@ const Logic = () => {
     });
   };
 
-  useRefreshOnFocus({ isInitialized: users !== [], refresh: init });
+  useRefreshOnFocus({ isInitialized: familyinfo !== [], refresh: init });
 
-  return { users, goQuestion, question, questionNum };
+  return { goQuestion, question, questionNum, myinfo, familyinfo };
 };
 
 let Home = stateful(Dumb, Logic);
