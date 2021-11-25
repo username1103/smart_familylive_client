@@ -127,7 +127,7 @@ const Logic = (p) => {
       userId: authHook.userId,
     });
     const groupQuestioninfo = await groupHook.getGroupQuestion({
-      groupQuestionId: groupQuestion.id.toString(),
+      groupQuestionId: groupQuestion._id,
     });
 
     const { groupMembers } = await groupHook.getMembers({ groupId });
