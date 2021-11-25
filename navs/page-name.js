@@ -13,6 +13,7 @@ export default {
   Question: 'question',
   Shop: 'shop',
   Settings: 'settings',
+  GoAnswer: 'goAnswer',
 
   Name: 'name',
   BloodType: 'blood-type',

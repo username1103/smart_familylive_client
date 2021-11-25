@@ -21,6 +21,7 @@ import InsertCode from '../pages/insert-code';
 import ReplyQuestion from '../pages/reply-question';
 import Question from '../pages/question';
 import EditUser from '../pages/edit-user';
+import GoAnswer from '../pages/goAnswer';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -42,6 +43,7 @@ const wrappedComps = {
   ReplyQuestion: wrapper.commonWrap(ReplyQuestion),
   Question: wrapper.commonWrap(Question),
   EditUser: wrapper.commonWrap(EditUser),
+  GoAnswer: wrapper.commonWrap(GoAnswer),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -109,6 +111,7 @@ export default () => {
       <S name={PageName.ReplyQuestion} component={wrappedComps.ReplyQuestion} />
       <S name={PageName.Question} component={wrappedComps.Question} />
       <S name={PageName.EditUser} component={wrappedComps.EditUser} />
+      <S name={PageName.GoAnswer} component={wrappedComps.GoAnswer} />
     </N>
   );
 };
