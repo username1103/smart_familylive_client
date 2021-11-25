@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Main from './main';
 import PageName from './page-name';
 import wrapper from './wrapper';

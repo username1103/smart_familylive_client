@@ -304,7 +304,9 @@ const Logic = () => {
         ...user,
         onClick: async () => {
           await userHook.click({ userId: user._id });
-          navigation.navigate(PageName.AlertModal, { user });
+          navigation.navigate(PageName.AlertModal, {
+            message: `${user.name}님을 콕 찔렀습니다.`,
+          });
         },
       }));
 

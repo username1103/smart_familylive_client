@@ -77,6 +77,17 @@ export const GroupProvider = ({ children }) => {
       return result.data;
     };
 
+    const replyQuestion = async ({ groupQuestionId, userId, answer }) => {
+      await authHook.authedAxios({
+        method: 'put',
+        url: `${addr}/v1/group-questions/${groupQuestionId}/answer`,
+        data: {
+          userId,
+          answer,
+        },
+      });
+    };
+
     return {
       generateCode,
       get,
@@ -85,6 +96,7 @@ export const GroupProvider = ({ children }) => {
       getQuestion,
       getCustomQuestion,
       getGroupQuestion,
+      replyQuestion,
     };
   };
 

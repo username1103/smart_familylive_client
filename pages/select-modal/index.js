@@ -5,7 +5,9 @@ import Colors from '../../styles/colors';
 
 const _width = Dimensions.get('screen').width;
 
-export const AlertModal = (p) => {
+export const SelectModal = (p) => {
+  const { message, onSuccess } = p.route.params;
+
   const navigation = useNavigation();
 
   return (
@@ -39,24 +41,34 @@ export const AlertModal = (p) => {
               fontSize: 15,
             }}
           >
-            {p.route.params.message}
+            {message}
           </Text>
         </View>
-
-        <TouchableOpacity
-          style={{
-            paddingVertical: 10,
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={{ fontSize: 15, color: Colors.M2 }}>확인</Text>
-        </TouchableOpacity>
+        <View style={{ paddingVertical: 15, flexDirection: 'row' }}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={{ fontSize: 15, color: 'gray' }}>취소</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={onSuccess}
+          >
+            <Text style={{ fontSize: 15, color: Colors.M2 }}>확인</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
-AlertModal.displayName = 'AlertModal';
+SelectModal.displayName = 'SelectModal';

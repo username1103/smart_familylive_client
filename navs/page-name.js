@@ -28,4 +28,5 @@ export default {
   EditUser: 'edit-user',
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
+  SelectModal: 'select-modal',
 };

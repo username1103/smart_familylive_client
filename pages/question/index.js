@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { answers, question, questionNum, goback, goAnswer } = p;
+  const { userAnswers, question, questionNum, goback } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -81,33 +81,22 @@ const Dumb = (p) => {
               >{`#${questionNum} ${question.contents}`}</Text>
             </View>
             <ScrollView style={{ flex: 1 }}>
-              {answers.map((answer) => (
+              {userAnswers.map((user, idx) => (
                 <View style={styles.elem}>
                   <View style={styles.userInfo}>
-                    <Text style={styles.name}>{answer.name}</Text>
+                    <Text style={styles.name}>{user.name}</Text>
                   </View>
 
-                  <TouchableOpacity
-                    onPress={() =>
-                      Alert.alert(
-                        null,
-                        '작성하시겠습니까?',
-                        [
-                          {
-                            text: '아니요',
-                            onPress: () => console.log('no'),
-                            style: 'cancel',
-                          },
-                          { text: '예', onPress: goAnswer },
-                        ],
-                        { cancelable: false }
-                      )
-                    }
-                  >
+                  <TouchableOpacity onPress={user.onPress} disabled={idx !== 0}>
                     <View style={styles.answer}>
-                      <Text style={styles.answerText}>
-                        {answer.answer?.contetns
-                          ? answer.answer?.contetns
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: user.answer ? 'black' : 'gray',
+                        }}
+                      >
+                        {user.answer
+                          ? user.answer.contents
                           : '아직 입력되지 않았어요'}
                       </Text>
                     </View>
@@ -127,19 +116,18 @@ const Logic = (p) => {
 
   const navigation = useNavigation();
 
-  const goAnswer = () => {
-    navigation.navigate(PageName.GoAnswer);
-  };
-
   const groupHook = useGroup();
   const authHook = useAuth();
   const userHook = useUser();
 
-  const [answers, setAnswers] = useState([]);
+  const [userAnswers, setUserAnswers] = useState([]);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
       userId: authHook.userId,
+    });
+    const groupQuestioninfo = await groupHook.getGroupQuestion({
+      groupQuestionId: groupQuestion.id.toString(),
     });
 
     const { groupMembers } = await groupHook.getMembers({ groupId });
@@ -157,25 +145,39 @@ const Logic = (p) => {
 
     const setOrderUsers = [...me, ...familyWithoutMe];
     const userAnswers = setOrderUsers.map((user) => {
-      const [userAnswer] = groupQuestion.answers.filter(
+      const [userAnswer] = groupQuestioninfo.answers.filter(
         (answer) => answer.author === user._id
       );
-      if (userAnswer) {
-        user.answer = userAnswer;
-      }
-      return user;
+
+      return {
+        ...user,
+        answer: userAnswer,
+        onPress: () =>
+          navigation.navigate(PageName.SelectModal, {
+            message: userAnswer
+              ? '답변을 수정하시겠어요?'
+              : '답변을 작성하시겠어요?',
+            onSuccess: () =>
+              navigation.navigate(PageName.GoAnswer, {
+                question,
+                questionNum,
+                groupQuestion: groupQuestioninfo,
+                answer: userAnswer,
+              }),
+          }),
+      };
     });
 
-    setAnswers(userAnswers);
+    setUserAnswers(userAnswers);
   };
 
   const goback = () => {
     navigation.goBack();
   };
 
-  useRefreshOnFocus({ isInitialized: answers !== [], refresh: init });
+  useRefreshOnFocus({ isInitialized: userAnswers !== [], refresh: init });
 
-  return { answers, question, questionNum, goAnswer, goback };
+  return { userAnswers, question, questionNum, goback };
 };
 
 let Question = stateful(Dumb, Logic);
