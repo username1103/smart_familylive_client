@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { goQuestion, question, questionNum, familyinfo, myinfo } = p;
+  const { goQuestion, question, questionNum, familyinfo, myinfo, goEditUser } =
+    p;
 
   return (
     <SafeAreaPlatfrom
@@ -143,8 +144,8 @@ const Dumb = (p) => {
                   </Text>
                 ) : null}
               </View>
-              <TouchableOpacity>
-                <FontAwesome5 name="user-edit" size={24} color={Colors.M4} />
+              <TouchableOpacity onPress={goEditUser}>
+                <FontAwesome5 name="user-edit" size={22} color={Colors.M4} />
               </TouchableOpacity>
             </View>
 
@@ -208,7 +209,9 @@ const Dumb = (p) => {
                     }}
                     onPress={user.onClick}
                   >
-                    <Text style={{ color: Colors.DISABLE }}>콕 찌르기</Text>
+                    <Text style={{ color: Colors.DISABLE, fontSize: 13 }}>
+                      콕 찌르기
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -301,6 +304,7 @@ const Logic = () => {
         ...user,
         onClick: async () => {
           await userHook.click({ userId: user._id });
+          navigation.navigate(PageName.AlertModal, { user });
         },
       }));
 
@@ -343,9 +347,15 @@ const Logic = () => {
     });
   };
 
+  const goEditUser = () => {
+    navigation.navigate(PageName.EditUser, {
+      user: myinfo,
+    });
+  };
+
   useRefreshOnFocus({ isInitialized: familyinfo !== [], refresh: init });
 
-  return { goQuestion, question, questionNum, myinfo, familyinfo };
+  return { goQuestion, question, questionNum, myinfo, familyinfo, goEditUser };
 };
 
 let Home = stateful(Dumb, Logic);

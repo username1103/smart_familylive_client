@@ -6,6 +6,7 @@ import wrapper from './wrapper';
 import { TestModal } from '../pages/test-modal';
 import KakaoSignin from '../pages/kakao-sign-in';
 import { InitGroup } from '../pages/initGroup';
+import { AlertModal } from '../pages/alert-modal';
 
 const RootNav = createStackNavigator();
 
@@ -14,6 +15,7 @@ const wrappedComps = {
   TestModal: wrapper.modalWrap(TestModal),
   KakaoSignin: wrapper.modalWrap(KakaoSignin),
   InitGroup: wrapper.modalWrap(InitGroup),
+  AlertModal: wrapper.modalWrap(AlertModal),
 };
 
 export default () => {
@@ -51,6 +53,7 @@ export default () => {
       <S name={PageName.TestModal} component={wrappedComps.TestModal} />
       <S name={PageName.KakaoSignin} component={wrappedComps.KakaoSignin} />
       <S name={PageName.InitGroup} component={wrappedComps.InitGroup} />
+      <S name={PageName.AlertModal} component={wrappedComps.AlertModal} />
     </N>
   );
 };

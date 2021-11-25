@@ -58,6 +58,14 @@ const ensure = async ({ addr, authedAxios, userId, setDeviceToken }) => {
   }
 };
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: true,
+  }),
+});
+
 export const DeviceWrapper = ({ children }) => {
   const addr = useAddr();
   const authHook = useAuth();

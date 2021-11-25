@@ -24,5 +24,7 @@ export default {
   ConnectionCode: 'connection-code',
 
   InitGroup: 'init-group',
+  EditUser: 'edit-user',
   TestModal: 'test-modal',
+  AlertModal: 'alert-modal',
 };
