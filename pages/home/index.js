@@ -83,8 +83,15 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { goQuestion, question, questionNum, familyinfo, myinfo, goEditUser } =
-    p;
+  const {
+    goQuestion,
+    question,
+    questionNum,
+    familyinfo,
+    myinfo,
+    goEditUser,
+    disableClick,
+  } = p;
 
   return (
     <SafeAreaPlatfrom
@@ -208,6 +215,7 @@ const Dumb = (p) => {
                       borderBottomWidth: 0.5,
                     }}
                     onPress={user.onClick}
+                    disabled={disableClick}
                   >
                     <Text style={{ color: Colors.DISABLE, fontSize: 13 }}>
                       콕 찌르기
@@ -283,6 +291,7 @@ const Logic = () => {
   const [groupQuestion, setGroupQuestion] = useState();
   const [myinfo, setMyinfo] = useState({});
   const [familyinfo, setFamilyinfo] = useState([]);
+  const [disableClick, setDisableClick] = useState(false);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -303,10 +312,12 @@ const Logic = () => {
       .map((user) => ({
         ...user,
         onClick: async () => {
+          setDisableClick(true);
           await userHook.click({ userId: user._id });
           navigation.navigate(PageName.AlertModal, {
             message: `${user.name}님을 콕 찔렀습니다.`,
           });
+          setDisableClick(false);
         },
       }));
 
@@ -357,7 +368,15 @@ const Logic = () => {
 
   useRefreshOnFocus({ isInitialized: familyinfo !== [], refresh: init });
 
-  return { goQuestion, question, questionNum, myinfo, familyinfo, goEditUser };
+  return {
+    goQuestion,
+    question,
+    questionNum,
+    myinfo,
+    familyinfo,
+    goEditUser,
+    disableClick,
+  };
 };
 
 let Home = stateful(Dumb, Logic);
