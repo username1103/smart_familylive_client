@@ -100,61 +100,63 @@ const Dumb = (p) => {
         <>
           <CustomHeader headerTitle="Home" />
           <View style={styles.container}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: '13%',
-                borderBottomColor: Colors.M2,
-                borderBottomWidth: 0.3,
-              }}
-            >
-              <View>
-                {myinfo.thumbnail !== '' ? (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: 'contain',
-                    }}
-                    source={{
-                      uri: myinfo.thumbnail,
-                    }}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: 5,
-                      backgroundColor: Colors.M1,
-                      borderRadius: 15,
-                      borderWidth: 0.3,
-                      borderColor: Colors.DISABLE,
-                    }}
-                  >
-                    <SimpleLineIcons name="user" size={45} color="black" />
-                  </View>
-                )}
+            {myinfo._id ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: '13%',
+                  borderBottomColor: Colors.M2,
+                  borderBottomWidth: 0.3,
+                }}
+              >
+                <View>
+                  {myinfo.thumbnail !== '' ? (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: 'contain',
+                      }}
+                      source={{
+                        uri: myinfo.thumbnail,
+                      }}
+                    />
+                  ) : (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 5,
+                        backgroundColor: Colors.M1,
+                        borderRadius: 15,
+                        borderWidth: 0.3,
+                        borderColor: Colors.DISABLE,
+                      }}
+                    >
+                      <SimpleLineIcons name="user" size={45} color="black" />
+                    </View>
+                  )}
+                </View>
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <Text style={{ fontSize: 17 }}>{myinfo.name}</Text>
+                  {myinfo.statusMessage !== '' ? (
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        marginTop: 3,
+                        color: Colors.DISABLE,
+                      }}
+                    >
+                      {myinfo.statusMessage}
+                    </Text>
+                  ) : null}
+                </View>
+                <TouchableOpacity onPress={goEditUser}>
+                  <FontAwesome5 name="user-edit" size={22} color={Colors.M4} />
+                </TouchableOpacity>
               </View>
-              <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text style={{ fontSize: 17 }}>{myinfo.name}</Text>
-                {myinfo.statusMessage !== '' ? (
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      marginTop: 3,
-                      color: Colors.DISABLE,
-                    }}
-                  >
-                    {myinfo.statusMessage}
-                  </Text>
-                ) : null}
-              </View>
-              <TouchableOpacity onPress={goEditUser}>
-                <FontAwesome5 name="user-edit" size={22} color={Colors.M4} />
-              </TouchableOpacity>
-            </View>
+            ) : null}
 
             {familyinfo.map((user) => (
               <View
