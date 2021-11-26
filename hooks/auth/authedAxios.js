@@ -58,6 +58,14 @@ export const createAuthedAxios = ({ state, setState }) => {
               refreshToken: metadata.refreshToken,
               accessToken: metadata.accessToken,
             });
+
+            setState(() => ({
+              status: 'authed',
+              userId: metadata.userId,
+              needInit: metadata.needInit,
+              isMatched: metadata.isMatched,
+            }));
+
             isRefreshingTokens = false;
           } catch (err) {
             isRefreshingTokens = false;
