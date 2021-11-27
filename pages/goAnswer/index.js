@@ -15,6 +15,7 @@ import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import { useGroup } from '../../hooks/group';
 import pageName from '../../navs/page-name';
 import { useAuth } from '../../hooks/auth';
+import { Ionicons } from '@expo/vector-icons';
 
 const Dumb = (p) => {
   const { goBack, setUserAnswer, userAnswer, submit, question, questionNum } =
@@ -26,8 +27,11 @@ const Dumb = (p) => {
         <>
           <CustomHeader
             headerTitle="Answer"
-            backButton={true}
-            goback={goBack}
+            leftButton={true}
+            onLeftButton={goBack}
+            leftButtonComponent={
+              <Ionicons name="arrow-back-outline" size={30} color={colors.M3} />
+            }
           />
 
           <View style={styles.container}>

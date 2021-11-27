@@ -3,7 +3,27 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Colors from '../../styles/colors';
 import { Ionicons } from '@expo/vector-icons';
 
-export default ({ headerTitle, backButton = false, goback }) => {
+export default ({
+  headerTitle,
+  leftButton = false,
+  onLeftButton,
+  leftButtonComponent = null,
+  rightButton = false,
+  onRightButton,
+  rightButtonComponent = null,
+}) => {
+  let textMargin = {};
+  if (leftButton && rightButton) {
+    textMargin = {};
+  } else if (leftButton) {
+    textMargin = {
+      marginRight: 40,
+    };
+  } else if (rightButton) {
+    textMargin = {
+      marginLeft: 40,
+    };
+  }
   return (
     <View
       style={{
@@ -13,18 +33,16 @@ export default ({ headerTitle, backButton = false, goback }) => {
         flexDirection: 'row',
       }}
     >
-      {backButton && (
+      {leftButton && (
         <View
           style={{
-            width: 30,
-            height: 30,
             justifyContent: 'center',
             alignItems: 'center',
             marginLeft: 10,
           }}
         >
-          <TouchableOpacity onPress={goback} disabled={false}>
-            <Ionicons name="arrow-back-outline" size={30} color={Colors.M3} />
+          <TouchableOpacity onPress={onLeftButton} disabled={false}>
+            {leftButtonComponent}
           </TouchableOpacity>
         </View>
       )}
@@ -32,7 +50,7 @@ export default ({ headerTitle, backButton = false, goback }) => {
         style={{
           flex: 1,
           fontSize: 20,
-          marginRight: backButton ? 40 : 0,
+          ...textMargin,
           fontWeight: 'bold',
           color: Colors.M3,
           textAlign: 'center',
@@ -40,6 +58,19 @@ export default ({ headerTitle, backButton = false, goback }) => {
       >
         {headerTitle}
       </Text>
+      {rightButton && (
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 10,
+          }}
+        >
+          <TouchableOpacity onPress={onRightButton} disabled={false}>
+            {rightButtonComponent}
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

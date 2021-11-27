@@ -15,7 +15,14 @@ const Dumb = (p) => {
 
   return (
     <>
-      <CustomHeader headerTitle="연결 코드" backButton={true} goback={goBack} />
+      <CustomHeader
+        headerTitle="연결 코드"
+        leftButton={true}
+        onLeftButton={goBack}
+        leftButtonComponent={
+          <Ionicons name="arrow-back-outline" size={30} color={Colors.M3} />
+        }
+      />
       <View
         style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}
       >

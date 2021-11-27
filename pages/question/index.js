@@ -11,6 +11,7 @@ import { useUser } from '../../hooks/user';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 import { useNavigation } from '@react-navigation/native';
 import PageName from '../../navs/page-name';
+import { Ionicons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -70,8 +71,11 @@ const Dumb = (p) => {
         <>
           <CustomHeader
             headerTitle="Question"
-            backButton={true}
-            goback={goback}
+            leftButton={true}
+            onLeftButton={goback}
+            leftButtonComponent={
+              <Ionicons name="arrow-back-outline" size={30} color={Colors.M3} />
+            }
           />
 
           <View style={styles.container}>
