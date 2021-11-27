@@ -75,9 +75,13 @@ const Dumb = (p) => {
                     onPress={question.onPress}
                   >
                     <View>
-                      <Text style={styles.listText}>{`#${
-                        questions.length - idx
-                      }. ${question.contents}`}</Text>
+                      <Text
+                        style={styles.listText}
+                        ellipsizeMode={'tail'}
+                        numberOfLines={1}
+                      >{`#${questions.length - idx}. ${
+                        question.contents
+                      }`}</Text>
                     </View>
                   </TouchableOpacity>
                 ))}
