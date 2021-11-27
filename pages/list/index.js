@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import CustomHeader from '../../components/custom-header';
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
@@ -44,6 +45,14 @@ const styles = StyleSheet.create({
 
 const Dumb = (p) => {
   const { questions } = p;
+
+  if (questions === null) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size={'large'} color={'black'} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaPlatfrom
@@ -87,7 +96,7 @@ const Logic = () => {
   const groupHook = useGroup();
   const userHook = useUser();
 
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(null);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -133,7 +142,9 @@ const Logic = () => {
     setQuestions(questions);
   };
 
-  useRefreshOnFocus({ isInitialized: questions !== [], refresh: init });
+  useRefreshOnFocus({ isInitialized: questions !== null, refresh: init });
+
+  useEffect(init, []);
 
   return { questions };
 };

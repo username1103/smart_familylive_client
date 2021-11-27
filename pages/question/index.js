@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import stateful from '../../utils/stateful';
 import Colors from '../../styles/colors';
@@ -64,6 +71,14 @@ const styles = StyleSheet.create({
 const Dumb = (p) => {
   const { userAnswers, question, questionNum, goback } = p;
 
+  if (userAnswers === null) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size={'large'} color={'black'} />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
@@ -124,7 +139,7 @@ const Logic = (p) => {
   const authHook = useAuth();
   const userHook = useUser();
 
-  const [userAnswers, setUserAnswers] = useState([]);
+  const [userAnswers, setUserAnswers] = useState(null);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -179,7 +194,9 @@ const Logic = (p) => {
     navigation.goBack();
   };
 
-  useRefreshOnFocus({ isInitialized: userAnswers !== [], refresh: init });
+  useRefreshOnFocus({ isInitialized: userAnswers !== null, refresh: init });
+
+  useEffect(init, []);
 
   return { userAnswers, question, questionNum, goback };
 };

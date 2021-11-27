@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
@@ -83,24 +84,43 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const {
-    goQuestion,
-    question,
-    questionNum,
-    familyinfo,
-    myinfo,
-    goEditUser,
-    disableClick,
-  } = p;
+  const { data, goQuestion, goShop, goEditUser, disableClick } = p;
+
+  if (data === null) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size={'large'} color={'black'} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
       components={
         <>
-          <CustomHeader headerTitle="Home" />
+          <CustomHeader
+            headerTitle="Home"
+            leftButton={true}
+            onLeftButton={goShop}
+            leftButtonComponent={
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  style={{ width: 45, height: 45 }}
+                  source={require('../../assets/coin.png')}
+                />
+                <Text>{data.group.coin}</Text>
+              </View>
+            }
+          />
           <View style={styles.container}>
-            {myinfo._id ? (
+            {data.myinfo._id ? (
               <View
                 style={{
                   flexDirection: 'row',
@@ -111,7 +131,7 @@ const Dumb = (p) => {
                 }}
               >
                 <View>
-                  {myinfo.thumbnail !== '' ? (
+                  {data.myinfo.thumbnail !== '' ? (
                     <Image
                       style={{
                         width: 45,
@@ -119,7 +139,7 @@ const Dumb = (p) => {
                         resizeMode: 'contain',
                       }}
                       source={{
-                        uri: myinfo.thumbnail,
+                        uri: data.myinfo.thumbnail,
                       }}
                     />
                   ) : (
@@ -139,8 +159,8 @@ const Dumb = (p) => {
                   )}
                 </View>
                 <View style={{ flex: 1, marginLeft: 10 }}>
-                  <Text style={{ fontSize: 17 }}>{myinfo.name}</Text>
-                  {myinfo.statusMessage !== '' ? (
+                  <Text style={{ fontSize: 17 }}>{data.myinfo.name}</Text>
+                  {data.myinfo.statusMessage !== '' ? (
                     <Text
                       style={{
                         fontSize: 12,
@@ -148,7 +168,7 @@ const Dumb = (p) => {
                         color: Colors.DISABLE,
                       }}
                     >
-                      {myinfo.statusMessage}
+                      {data.myinfo.statusMessage}
                     </Text>
                   ) : null}
                 </View>
@@ -158,7 +178,7 @@ const Dumb = (p) => {
               </View>
             ) : null}
 
-            {familyinfo.map((user) => (
+            {data.familyinfo.map((user) => (
               <View
                 style={{
                   flexDirection: 'row',
@@ -169,7 +189,7 @@ const Dumb = (p) => {
                 }}
               >
                 <View>
-                  {myinfo.thumbnail !== '' ? (
+                  {user.thumbnail !== '' ? (
                     <Image
                       style={{
                         width: 40,
@@ -227,7 +247,7 @@ const Dumb = (p) => {
               </View>
             ))}
           </View>
-          {question ? (
+          {data.question ? (
             <View
               style={{
                 justifyContent: 'flex-end',
@@ -260,7 +280,7 @@ const Dumb = (p) => {
                     </Text>
 
                     <Text style={{ fontSize: 0.04 * width, color: 'black' }}>
-                      {`#${questionNum} ${question.contents}`}
+                      {`#${data.questionNum} ${data.question.contents}`}
                     </Text>
                   </View>
                   <View
@@ -288,17 +308,16 @@ const Logic = () => {
   const authHook = useAuth();
   const userHook = useUser();
 
-  const [question, setQuestion] = useState();
-  const [questionNum, setQuestionNum] = useState(0);
-  const [groupQuestion, setGroupQuestion] = useState();
-  const [myinfo, setMyinfo] = useState({});
-  const [familyinfo, setFamilyinfo] = useState([]);
+  const [data, setData] = useState(null);
+
   const [disableClick, setDisableClick] = useState(false);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
       userId: authHook.userId,
     });
+
+    const groupinfo = await groupHook.get({ groupId });
 
     const { groupMembers } = await groupHook.getMembers({ groupId });
 
@@ -326,11 +345,12 @@ const Logic = () => {
     const { groupQuestions } = await groupHook.getQuestions({ groupId });
 
     let homeGroupQuestion;
+    let questionNum = 0;
 
     for (const [idx, question] of groupQuestions.entries()) {
       if (!question.allReplied) {
         homeGroupQuestion = question;
-        setQuestionNum(groupQuestions.length - idx);
+        questionNum = groupQuestions.length - idx;
       }
     }
 
@@ -347,37 +367,44 @@ const Logic = () => {
       }
     }
 
-    setGroupQuestion(homeGroupQuestion);
-    setQuestion(homeQuestion);
-
-    setMyinfo(me[0]);
-    setFamilyinfo(familyWithoutMe);
+    setData({
+      groupQuestion: homeGroupQuestion,
+      question: homeQuestion,
+      group: groupinfo,
+      myinfo: me[0],
+      familyinfo: familyWithoutMe,
+      questionNum,
+    });
   };
+
+  useRefreshOnFocus({ isInitialized: data !== null, refresh: init });
+
+  useEffect(init, []);
 
   const goQuestion = () => {
     navigation.navigate(PageName.Question, {
-      groupQuestion,
-      questionNum,
-      question,
+      groupQuestion: data.groupQuestion,
+      questionNum: data.questionNum,
+      question: data.question,
     });
   };
 
   const goEditUser = () => {
     navigation.navigate(PageName.EditUser, {
-      user: myinfo,
+      user: data.myinfo,
     });
   };
 
-  useRefreshOnFocus({ isInitialized: familyinfo !== [], refresh: init });
+  const goShop = () => {
+    navigation.navigate(PageName.Shop);
+  };
 
   return {
+    data,
     goQuestion,
-    question,
-    questionNum,
-    myinfo,
-    familyinfo,
     goEditUser,
     disableClick,
+    goShop,
   };
 };
 
