@@ -8,6 +8,7 @@ import KakaoSignin from '../pages/kakao-sign-in';
 import { InitGroup } from '../pages/initGroup';
 import { AlertModal } from '../pages/alert-modal';
 import { SelectModal } from '../pages/select-modal';
+import { BottomSelectModal } from '../pages/bottom-select-modal';
 
 const RootNav = createStackNavigator();
 
@@ -18,6 +19,7 @@ const wrappedComps = {
   InitGroup: wrapper.modalWrap(InitGroup),
   AlertModal: wrapper.modalWrap(AlertModal),
   SelectModal: wrapper.modalWrap(SelectModal),
+  BottomSelectModal: wrapper.modalWrap(BottomSelectModal),
 };
 
 export default () => {
@@ -57,6 +59,10 @@ export default () => {
       <S name={PageName.InitGroup} component={wrappedComps.InitGroup} />
       <S name={PageName.AlertModal} component={wrappedComps.AlertModal} />
       <S name={PageName.SelectModal} component={wrappedComps.SelectModal} />
+      <S
+        name={PageName.BottomSelectModal}
+        component={wrappedComps.BottomSelectModal}
+      />
     </N>
   );
 };

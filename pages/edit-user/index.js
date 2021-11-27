@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
@@ -15,7 +16,6 @@ import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import CustomHeader from '../../components/custom-header';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -44,6 +44,7 @@ const Dumb = (p) => {
     customSetBirthday,
     thumbnail,
     pickImage,
+    changeImage,
   } = p;
 
   return (
@@ -61,259 +62,264 @@ const Dumb = (p) => {
           <Text style={{ color: Colors.M3, fontSize: 18 }}>완료</Text>
         }
       />
-
-      <View
-        style={{
-          flex: 0.25,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <View style={{ marginTop: 15 }}>
-          {thumbnail !== '' ? (
-            <Image
-              style={{
-                width: 100,
-                aspectRatio: 1,
-                backgroundColor: Colors.M1,
-                borderRadius: 50,
-                borderWidth: 0.3,
-                borderColor: Colors.DISABLE,
-                resizeMode: 'cover',
-              }}
-              source={{
-                uri: thumbnail,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                width: 100,
-                aspectRatio: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 5,
-                borderRadius: 50,
-                borderWidth: 0.3,
-                borderColor: Colors.DISABLE,
-              }}
-            >
-              <SimpleLineIcons name="user" size={35} color="black" />
-            </View>
-          )}
-        </View>
-        <TouchableOpacity onPress={pickImage}>
-          <Text style={{ marginVertical: 15, color: Colors.M2, fontSize: 17 }}>
-            프로필 사진 바꾸기
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flex: 0.75,
-          alignItems: 'center',
-        }}
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            width: _width * 0.85,
+            flex: 0.25,
             alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          <View style={{ flex: 0.2 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>이름</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 0.8,
-              marginLeft: 20,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.DISABLE,
-            }}
-          >
-            <TextInput
-              style={{ fontSize: 17 }}
-              value={name}
-              onChangeText={setName}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            width: _width * 0.85,
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ flex: 0.2 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>메시지</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 0.8,
-              marginLeft: 20,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.DISABLE,
-            }}
-          >
-            <TextInput
-              style={{ fontSize: 17 }}
-              value={statusMessage}
-              onChangeText={setStatusMessage}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            width: _width * 0.85,
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ flex: 0.2 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>성별</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 0.8,
-              marginLeft: 20,
-              flexDirection: 'row',
-            }}
-          >
-            {['M', 'W'].map((type) => (
-              <TouchableOpacity
-                style={{ flex: 1, justifyContent: 'space-evenly' }}
-                onPress={() => setGender(type)}
-              >
-                <Text
-                  style={{
-                    fontSize: 17,
-                    textAlign: 'center',
-                    color: type === gender ? Colors.M2 : Colors.M3,
-                  }}
-                >
-                  {type === 'M' ? '남' : '여'}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            width: _width * 0.85,
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ flex: 0.2 }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>혈액형</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 0.8,
-              marginLeft: 20,
-              flexDirection: 'row',
-            }}
-          >
-            {['A', 'B', 'O', 'AB'].map((type) => (
-              <TouchableOpacity
-                style={{ flex: 1, justifyContent: 'space-evenly' }}
-                onPress={() => setBloodType(type)}
-              >
-                <Text
-                  style={{
-                    fontSize: 17,
-                    textAlign: 'center',
-                    color: type === bloodType ? Colors.M2 : Colors.M3,
-                  }}
-                >
-                  {type}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            width: _width * 0.85,
-            alignItems: 'center',
-          }}
-        >
-          <View
-            style={{
-              flex: 0.2,
-              justifyContent: 'center',
-            }}
-          >
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>생일</Text>
-          </View>
-
-          <View
-            style={{
-              flex: 0.8,
-              marginLeft: 20,
-            }}
-          >
-            {Platform.OS === 'ios' ? (
-              <>
-                <DateTimePicker
-                  mode={'date'}
-                  display={'spinner'}
-                  value={new Date(birthday)}
-                  locale={'ko'}
-                  maximumDate={new Date(2021, 12, 31)}
-                  onChange={(event, selectedDate) => setBirthday(selectedDate)}
-                />
-              </>
+          <View style={{ marginTop: 15 }}>
+            {thumbnail !== '' ? (
+              <Image
+                style={{
+                  width: 100,
+                  aspectRatio: 1,
+                  backgroundColor: Colors.M1,
+                  borderRadius: 50,
+                  borderWidth: 0.3,
+                  borderColor: Colors.DISABLE,
+                  resizeMode: 'cover',
+                }}
+                source={{
+                  uri: thumbnail,
+                }}
+              />
             ) : (
-              <>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      borderBottomWidth: 1,
-                      borderBottomColor: Colors.DISABLE,
-                    }}
-                    onPress={() => setShowDate(true)}
-                  >
-                    <Text style={{ fontSize: 17 }}>
-                      {moment(birthday).format('YYYY년 MM월 DD일')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                {showDate && (
-                  <DateTimePicker
-                    mode={'date'}
-                    display={'default'}
-                    value={new Date(birthday)}
-                    locale={'ko'}
-                    maximumDate={new Date()}
-                    onChange={(event, selectedDate) =>
-                      customSetBirthday(selectedDate)
-                    }
-                  />
-                )}
-              </>
+              <View
+                style={{
+                  width: 100,
+                  aspectRatio: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 5,
+                  borderRadius: 50,
+                  borderWidth: 0.3,
+                  borderColor: Colors.DISABLE,
+                }}
+              >
+                <SimpleLineIcons name="user" size={35} color="black" />
+              </View>
             )}
           </View>
+          <TouchableOpacity onPress={changeImage}>
+            <Text
+              style={{ marginVertical: 15, color: Colors.M2, fontSize: 17 }}
+            >
+              프로필 사진 바꾸기
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
+        <View
+          style={{
+            flex: 0.75,
+            alignItems: 'center',
+          }}
+        >
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              width: _width * 0.85,
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flex: 0.2 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>이름</Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                marginLeft: 20,
+                borderBottomWidth: 1,
+                borderBottomColor: Colors.DISABLE,
+              }}
+            >
+              <TextInput
+                style={{ fontSize: 17 }}
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              width: _width * 0.85,
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flex: 0.2 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>메시지</Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                marginLeft: 20,
+                borderBottomWidth: 1,
+                borderBottomColor: Colors.DISABLE,
+              }}
+            >
+              <TextInput
+                style={{ fontSize: 17 }}
+                value={statusMessage}
+                onChangeText={setStatusMessage}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              width: _width * 0.85,
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flex: 0.2 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>성별</Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                marginLeft: 20,
+                flexDirection: 'row',
+              }}
+            >
+              {['M', 'W'].map((type) => (
+                <TouchableOpacity
+                  style={{ flex: 1, justifyContent: 'space-evenly' }}
+                  onPress={() => setGender(type)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      textAlign: 'center',
+                      color: type === gender ? Colors.M2 : Colors.M3,
+                    }}
+                  >
+                    {type === 'M' ? '남' : '여'}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              width: _width * 0.85,
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flex: 0.2 }}>
+              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>혈액형</Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                marginLeft: 20,
+                flexDirection: 'row',
+              }}
+            >
+              {['A', 'B', 'O', 'AB'].map((type) => (
+                <TouchableOpacity
+                  style={{ flex: 1, justifyContent: 'space-evenly' }}
+                  onPress={() => setBloodType(type)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      textAlign: 'center',
+                      color: type === bloodType ? Colors.M2 : Colors.M3,
+                    }}
+                  >
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              width: _width * 0.85,
+              alignItems: 'center',
+            }}
+          >
+            <View
+              style={{
+                flex: 0.2,
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>생일</Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                marginLeft: 20,
+              }}
+            >
+              {Platform.OS === 'ios' ? (
+                <>
+                  <DateTimePicker
+                    mode={'date'}
+                    display={'spinner'}
+                    value={new Date(birthday)}
+                    locale={'ko'}
+                    maximumDate={new Date(2021, 12, 31)}
+                    onChange={(event, selectedDate) =>
+                      setBirthday(selectedDate)
+                    }
+                  />
+                </>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: Colors.DISABLE,
+                      }}
+                      onPress={() => setShowDate(true)}
+                    >
+                      <Text style={{ fontSize: 17 }}>
+                        {moment(birthday).format('YYYY년 MM월 DD일')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  {showDate && (
+                    <DateTimePicker
+                      mode={'date'}
+                      display={'default'}
+                      value={new Date(birthday)}
+                      locale={'ko'}
+                      maximumDate={new Date()}
+                      onChange={(event, selectedDate) =>
+                        customSetBirthday(selectedDate)
+                      }
+                    />
+                  )}
+                </>
+              )}
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -367,21 +373,25 @@ const Logic = (p) => {
     });
 
     if (thumbnail !== user.thumbnail) {
-      const form = new FormData();
-      form.append('file', {
-        name: 'the-image',
-        type: 'image/jpeg',
-        uri:
-          Platform.OS === 'android'
-            ? thumbnail
-            : thumbnail.replace('file://', ''),
-      });
+      let key = '';
+      if (thumbnail !== '') {
+        const form = new FormData();
+        form.append('file', {
+          name: 'the-image',
+          type: 'image/jpeg',
+          uri:
+            Platform.OS === 'android'
+              ? thumbnail
+              : thumbnail.replace('file://', ''),
+        });
 
-      const result = await imageHook.upload(form);
+        const result = await imageHook.upload(form);
+        key = result.key;
+      }
 
       await userHook.updateImage({
         userId: authHook.userId,
-        thumbnail: result.key,
+        thumbnail: key,
       });
     }
 
@@ -406,6 +416,31 @@ const Logic = (p) => {
     }
   };
 
+  const changeImage = () => {
+    navigation.navigate(PageName.BottomSelectModal, {
+      options: [
+        {
+          label: '현재 사진 삭제',
+          onPress: () => setThumbnail(''),
+          style: {
+            color: '#000',
+            fontSize: 15,
+          },
+          goback: true,
+        },
+        {
+          label: '라이브러리에서 선택',
+          onPress: pickImage,
+          style: {
+            color: '#000',
+            fontSize: 15,
+          },
+          goback: true,
+        },
+      ],
+    });
+  };
+
   return {
     goback,
     confirm,
@@ -423,6 +458,7 @@ const Logic = (p) => {
     setBirthday,
     customSetBirthday,
     thumbnail,
+    changeImage,
     pickImage,
   };
 };

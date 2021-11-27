@@ -30,4 +30,5 @@ export default {
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
   SelectModal: 'select-modal',
+  BottomSelectModal: 'bottom-select-modal',
 };
