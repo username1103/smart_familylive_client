@@ -381,10 +381,11 @@ const Logic = () => {
     let homeGroupQuestion;
     let questionNum = 0;
 
-    for (const [idx, question] of groupQuestions.entries()) {
+    for (const [idx, question] of groupQuestions.reverse().entries()) {
+      homeGroupQuestion = question;
+      questionNum = idx + 1;
       if (!question.allReplied) {
-        homeGroupQuestion = question;
-        questionNum = groupQuestions.length - idx;
+        break;
       }
     }
 
