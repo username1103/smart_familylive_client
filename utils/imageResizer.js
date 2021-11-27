@@ -38,7 +38,7 @@ export default async (result) => {
 
   return manipulateAsync(
     result.uri,
-    resizeRatio(_width, _height, [1, 1], 520),
+    resizeRatio(_width, _height, [1, 1], 600),
     { compress: 0.7, format: SaveFormat.JPEG }
   );
 };

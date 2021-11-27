@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-  Image,
-  Platform,
-} from 'react-native';
+import React from 'react';
+import { Text, View, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 import Colors from '../../styles/colors';
 import stateful from '../../utils/stateful';
-import { useAuth } from '../../hooks/auth';
-import { useUser } from '../../hooks/user';
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 import CustomHeader from '../../components/custom-header';
-import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import PageName from '../../navs/page-name';
-import imageResizer from '../../utils/imageResizer';
-import { useImage } from '../../hooks/image';
 
 const _width = Dimensions.get('window').width;
 
@@ -54,7 +39,7 @@ const Dumb = (p) => {
                   flex: 1,
                   aspectRatio: 1,
                   backgroundColor: Colors.M1,
-                  borderRadius: 100,
+                  borderRadius: 200,
                   borderWidth: 0.3,
                   borderColor: Colors.DISABLE,
                   resizeMode: 'cover',
@@ -70,7 +55,7 @@ const Dumb = (p) => {
                   aspectRatio: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 100,
+                  borderRadius: 200,
                   borderWidth: 0.3,
                   borderColor: Colors.DISABLE,
                 }}
