@@ -37,6 +37,7 @@ export const AlertModal = (p) => {
             style={{
               textAlign: 'center',
               fontSize: 15,
+              fontWeight: '600',
             }}
           >
             {p.route.params.message}
@@ -52,7 +53,9 @@ export const AlertModal = (p) => {
           }}
           onPress={() => navigation.goBack()}
         >
-          <Text style={{ fontSize: 15, color: Colors.M2 }}>확인</Text>
+          <Text style={{ fontSize: 15, color: Colors.M2, fontWeight: '600' }}>
+            확인
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

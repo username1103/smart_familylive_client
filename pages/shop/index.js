@@ -25,7 +25,7 @@ import pageName from '../../navs/page-name';
 const width = Dimensions.get('window').width;
 
 const Dumb = (p) => {
-  const { data } = p;
+  const { data, goFamilyItem } = p;
 
   if (data === null) {
     return (
@@ -60,7 +60,7 @@ const Dumb = (p) => {
               </View>
             }
             rightButton={true}
-            onRightButton={() => {}}
+            onRightButton={goFamilyItem}
             rightButtonComponent={
               <View style={{ marginRight: 5 }}>
                 <FontAwesome5 name="shopping-bag" size={24} color={Colors.M2} />
@@ -142,7 +142,11 @@ const Logic = () => {
 
   useEffect(init, []);
 
-  return { data };
+  const goFamilyItem = () => {
+    navigation.navigate(pageName.FamilyItem);
+  };
+
+  return { data, goFamilyItem };
 };
 
 let Shop = stateful(Dumb, Logic);

@@ -13,7 +13,7 @@ import stateful from '../../utils/stateful';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 
 const Dumb = (p) => {
-  const { logout, goConnectionCode, goSettings, alarmStatus, goFamilyInfo } = p;
+  const { logout, goSettings, alarmStatus, goFamilyInfo, goFamilyItem } = p;
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
@@ -59,6 +59,24 @@ const Dumb = (p) => {
                 }}
               >
                 <Text style={{ fontSize: 20, color: 'black' }}>가족 정보</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goFamilyItem}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderRadius: 13,
+                  height: 45,
+                  width: 350,
+                  borderWidth: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Text style={{ fontSize: 20, color: 'black' }}>
+                  아이템 보관함
+                </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={logout}>
@@ -123,10 +141,15 @@ const Logic = () => {
     navigation.navigate(PageName.FamilyInfo);
   };
 
+  const goFamilyItem = () => {
+    navigation.navigate(PageName.FamilyItem);
+  };
+
   return {
     logout,
     goSettings,
     goFamilyInfo,
+    goFamilyItem,
     alarmStatus: alarmStatus ? 'ON' : 'OFF',
   };
 };

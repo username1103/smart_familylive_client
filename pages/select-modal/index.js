@@ -45,6 +45,7 @@ export const SelectModal = (p) => {
             style={{
               textAlign: 'center',
               fontSize: 15,
+              fontWeight: '600',
             }}
           >
             {message}
@@ -59,7 +60,9 @@ export const SelectModal = (p) => {
             }}
             onPress={() => navigation.goBack()}
           >
-            <Text style={{ fontSize: 15, color: 'gray' }}>취소</Text>
+            <Text style={{ fontSize: 15, color: 'gray', fontWeight: '600' }}>
+              취소
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -69,7 +72,9 @@ export const SelectModal = (p) => {
             }}
             onPress={_onSuccess}
           >
-            <Text style={{ fontSize: 15, color: Colors.M2 }}>확인</Text>
+            <Text style={{ fontSize: 15, color: Colors.M2, fontWeight: '600' }}>
+              확인
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

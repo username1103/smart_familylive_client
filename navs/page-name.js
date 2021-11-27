@@ -26,6 +26,7 @@ export default {
   EditUser: 'edit-user',
   UserInfo: 'user-info',
   FamilyInfo: 'family-info',
+  FamilyItem: 'family-item',
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
   SelectModal: 'select-modal',
