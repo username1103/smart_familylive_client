@@ -23,7 +23,7 @@ const ensure = async ({ addr, authedAxios, userId, setDeviceToken }) => {
   }
 
   if (finalStatus !== 'granted') {
-    return;
+    return false;
   }
 
   let expoToken;
@@ -56,6 +56,8 @@ const ensure = async ({ addr, authedAxios, userId, setDeviceToken }) => {
   } catch (e) {
     console.log(e);
   }
+
+  return true;
 };
 
 Notifications.setNotificationHandler({
@@ -88,14 +90,14 @@ export const DeviceWrapper = ({ children }) => {
   }, [addr, authHook.status]);
 
   const take = () => {
-    const ensure_ = () =>
-      ensure({
+    const ensure_ = async () => {
+      await ensure({
         addr,
         authedAxios: authHook.authedAxios,
         userId,
         setDeviceToken,
       });
-
+    };
     const removeDeviceToken = async () => {
       if (deviceToken !== '') {
         await authHook.authedAxios({

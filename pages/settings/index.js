@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View, Linking } from 'react-native';
 import Colors from '../../styles/colors';
 import CustomHeader from '../../components/custom-header';
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
@@ -8,11 +8,12 @@ import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import { useAuth } from '../../hooks/auth';
 import { useDevice } from '../../hooks/device';
 import PageName from '../../navs/page-name';
-
+import * as Notifications from 'expo-notifications';
 import stateful from '../../utils/stateful';
+import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 
 const Dumb = (p) => {
-  const { logout, goConnectionCode } = p;
+  const { logout, goConnectionCode, goSettings, alarmStatus } = p;
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
@@ -26,7 +27,7 @@ const Dumb = (p) => {
               justifyContent: 'flex-start',
             }}
           >
-            <TouchableOpacity onPress={goConnectionCode} disabled={false}>
+            <TouchableOpacity onPress={goSettings}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -39,10 +40,12 @@ const Dumb = (p) => {
                   marginVertical: 5,
                 }}
               >
-                <Text style={{ fontSize: 20, color: '#000000' }}>연결코드</Text>
+                <Text style={{ fontSize: 20, color: 'black' }}>
+                  알림 설정 : {alarmStatus}
+                </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={logout} disabled={false}>
+            <TouchableOpacity onPress={goConnectionCode}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -55,7 +58,23 @@ const Dumb = (p) => {
                   marginVertical: 5,
                 }}
               >
-                <Text style={{ fontSize: 20, color: '#000000' }}>로그아웃</Text>
+                <Text style={{ fontSize: 20, color: 'black' }}>연결 코드</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logout}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderRadius: 13,
+                  height: 45,
+                  width: 350,
+                  borderWidth: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Text style={{ fontSize: 20, color: 'black' }}>로그아웃</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -70,18 +89,39 @@ const Logic = () => {
   const authHook = useAuth();
   const deviceHook = useDevice();
 
+  const [alarmStatus, setAlarmStatus] = useState(null);
+
   const logout = async () => {
     await deviceHook.removeDeviceToken();
     await authHook.logout();
   };
 
-  const goConnectionCode = async () => {
+  const init = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status === 'granted') {
+      setAlarmStatus(true);
+    } else {
+      setAlarmStatus(false);
+    }
+  };
+
+  useRefreshOnFocus({ isInitialized: alarmStatus !== null, refresh: init });
+
+  useEffect(init, []);
+
+  const goConnectionCode = () => {
     navigation.navigate(PageName.ConnectionCode);
+  };
+
+  const goSettings = () => {
+    Linking.openSettings();
   };
 
   return {
     logout,
     goConnectionCode,
+    goSettings,
+    alarmStatus: alarmStatus ? 'ON' : 'OFF',
   };
 };
 

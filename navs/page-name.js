@@ -26,6 +26,7 @@ export default {
 
   InitGroup: 'init-group',
   EditUser: 'edit-user',
+  UserInfo: 'user-info',
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
   SelectModal: 'select-modal',

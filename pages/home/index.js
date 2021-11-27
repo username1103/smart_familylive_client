@@ -130,54 +130,63 @@ const Dumb = (p) => {
                   paddingVertical: 15,
                 }}
               >
-                <View>
-                  {data.myinfo.thumbnail !== '' ? (
-                    <Image
-                      style={{
-                        width: 60,
-                        aspectRatio: 1,
-                        backgroundColor: Colors.M1,
-                        borderRadius: 100,
-                        borderWidth: 0.3,
-                        borderColor: Colors.DISABLE,
-                        resizeMode: 'cover',
-                      }}
-                      source={{
-                        uri: data.myinfo.thumbnail,
-                      }}
-                    />
-                  ) : (
-                    <View
-                      style={{
-                        width: 60,
-                        aspectRatio: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 5,
-                        backgroundColor: Colors.M1,
-                        borderRadius: 100,
-                        borderWidth: 0.3,
-                        borderColor: Colors.DISABLE,
-                      }}
-                    >
-                      <SimpleLineIcons name="user" size={40} color="black" />
-                    </View>
-                  )}
-                </View>
-                <View style={{ flex: 1, marginLeft: 10 }}>
-                  <Text style={{ fontSize: 17 }}>{data.myinfo.name}</Text>
-                  {data.myinfo.statusMessage !== '' ? (
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        marginTop: 3,
-                        color: Colors.DISABLE,
-                      }}
-                    >
-                      {data.myinfo.statusMessage}
-                    </Text>
-                  ) : null}
-                </View>
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={data.myinfo.goInfo}
+                >
+                  <View>
+                    {data.myinfo.thumbnail !== '' ? (
+                      <Image
+                        style={{
+                          width: 60,
+                          aspectRatio: 1,
+                          backgroundColor: Colors.M1,
+                          borderRadius: 100,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
+                          resizeMode: 'cover',
+                        }}
+                        source={{
+                          uri: data.myinfo.thumbnail,
+                        }}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          width: 60,
+                          aspectRatio: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 5,
+                          backgroundColor: Colors.M1,
+                          borderRadius: 100,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
+                        }}
+                      >
+                        <SimpleLineIcons name="user" size={40} color="black" />
+                      </View>
+                    )}
+                  </View>
+                  <View style={{ flex: 1, marginLeft: 10 }}>
+                    <Text style={{ fontSize: 17 }}>{data.myinfo.name}</Text>
+                    {data.myinfo.statusMessage !== '' ? (
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          marginTop: 3,
+                          color: Colors.DISABLE,
+                        }}
+                      >
+                        {data.myinfo.statusMessage}
+                      </Text>
+                    ) : null}
+                  </View>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={goEditUser}>
                   <FontAwesome5 name="user-edit" size={22} color={Colors.M4} />
                 </TouchableOpacity>
@@ -194,53 +203,62 @@ const Dumb = (p) => {
                   paddingVertical: 10,
                 }}
               >
-                <View>
-                  {user.thumbnail !== '' ? (
-                    <Image
-                      style={{
-                        width: 50,
-                        aspectRatio: 1,
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={user.goInfo}
+                >
+                  <View>
+                    {user.thumbnail !== '' ? (
+                      <Image
+                        style={{
+                          width: 50,
+                          aspectRatio: 1,
 
-                        borderRadius: 100,
-                        borderWidth: 0.3,
-                        borderColor: Colors.DISABLE,
-                        resizeMode: 'cover',
-                      }}
-                      source={{
-                        uri: user.thumbnail,
-                      }}
-                    />
-                  ) : (
-                    <View
-                      style={{
-                        width: 50,
-                        aspectRatio: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: Colors.M1,
-                        borderRadius: 100,
-                        borderWidth: 0.3,
-                        borderColor: Colors.DISABLE,
-                      }}
-                    >
-                      <SimpleLineIcons name="user" size={35} color="black" />
-                    </View>
-                  )}
-                </View>
-                <View style={{ flex: 1, marginLeft: 10 }}>
-                  <Text style={{ fontSize: 15 }}>{user.name}</Text>
-                  {user.statusMessage !== '' ? (
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        marginTop: 3,
-                        color: Colors.DISABLE,
-                      }}
-                    >
-                      {user.statusMessage}
-                    </Text>
-                  ) : null}
-                </View>
+                          borderRadius: 100,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
+                          resizeMode: 'cover',
+                        }}
+                        source={{
+                          uri: user.thumbnail,
+                        }}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          width: 50,
+                          aspectRatio: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: Colors.M1,
+                          borderRadius: 100,
+                          borderWidth: 0.3,
+                          borderColor: Colors.DISABLE,
+                        }}
+                      >
+                        <SimpleLineIcons name="user" size={35} color="black" />
+                      </View>
+                    )}
+                  </View>
+                  <View style={{ flex: 1, marginLeft: 10 }}>
+                    <Text style={{ fontSize: 15 }}>{user.name}</Text>
+                    {user.statusMessage !== '' ? (
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          marginTop: 3,
+                          color: Colors.DISABLE,
+                        }}
+                      >
+                        {user.statusMessage}
+                      </Text>
+                    ) : null}
+                  </View>
+                </TouchableOpacity>
                 <View>
                   <TouchableOpacity
                     style={{
@@ -351,6 +369,11 @@ const Logic = () => {
           });
           setDisableClick(false);
         },
+        goInfo: () => {
+          navigation.navigate(PageName.UserInfo, {
+            user,
+          });
+        },
       }));
 
     const { groupQuestions } = await groupHook.getQuestions({ groupId });
@@ -382,7 +405,14 @@ const Logic = () => {
       groupQuestion: homeGroupQuestion,
       question: homeQuestion,
       group: groupinfo,
-      myinfo: me[0],
+      myinfo: {
+        ...me[0],
+        goInfo: () => {
+          navigation.navigate(PageName.UserInfo, {
+            user: me[0],
+          });
+        },
+      },
       familyinfo: familyWithoutMe,
       questionNum,
     });
