@@ -125,17 +125,21 @@ const Dumb = (p) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  height: '13%',
                   borderBottomColor: Colors.M2,
                   borderBottomWidth: 0.3,
+                  paddingVertical: 15,
                 }}
               >
                 <View>
                   {data.myinfo.thumbnail !== '' ? (
                     <Image
                       style={{
-                        width: 45,
-                        height: 45,
+                        width: 60,
+                        aspectRatio: 1,
+                        backgroundColor: Colors.M1,
+                        borderRadius: 50,
+                        borderWidth: 0.3,
+                        borderColor: Colors.DISABLE,
                         resizeMode: 'contain',
                       }}
                       source={{
@@ -145,16 +149,18 @@ const Dumb = (p) => {
                   ) : (
                     <View
                       style={{
+                        width: 60,
+                        aspectRatio: 1,
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 5,
                         backgroundColor: Colors.M1,
-                        borderRadius: 15,
+                        borderRadius: 50,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
                       }}
                     >
-                      <SimpleLineIcons name="user" size={45} color="black" />
+                      <SimpleLineIcons name="user" size={40} color="black" />
                     </View>
                   )}
                 </View>
@@ -183,17 +189,21 @@ const Dumb = (p) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  height: '11%',
                   borderBottomColor: Colors.M2,
                   borderBottomWidth: 0.3,
+                  paddingVertical: 10,
                 }}
               >
                 <View>
                   {user.thumbnail !== '' ? (
                     <Image
                       style={{
-                        width: 40,
-                        height: 40,
+                        width: 50,
+                        aspectRatio: 1,
+                        backgroundColor: Colors.M1,
+                        borderRadius: 50,
+                        borderWidth: 0.3,
+                        borderColor: Colors.DISABLE,
                         resizeMode: 'contain',
                       }}
                       source={{
@@ -203,16 +213,18 @@ const Dumb = (p) => {
                   ) : (
                     <View
                       style={{
+                        width: 50,
+                        aspectRatio: 1,
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 5,
                         backgroundColor: Colors.M1,
-                        borderRadius: 15,
+                        borderRadius: 50,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
                       }}
                     >
-                      <SimpleLineIcons name="user" size={40} color="black" />
+                      <SimpleLineIcons name="user" size={35} color="black" />
                     </View>
                   )}
                 </View>
