@@ -6,10 +6,16 @@ import Colors from '../../styles/colors';
 const _width = Dimensions.get('screen').width;
 
 export const SelectModal = (p) => {
-  const { message, onSuccess } = p.route.params;
+  const { message, onSuccess, goBack = false } = p.route.params;
 
   const navigation = useNavigation();
 
+  const _onSuccess = async () => {
+    await onSuccess();
+    if (goBack) {
+      navigation.goBack();
+    }
+  };
   return (
     <View
       style={{
@@ -61,7 +67,7 @@ export const SelectModal = (p) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            onPress={onSuccess}
+            onPress={_onSuccess}
           >
             <Text style={{ fontSize: 15, color: Colors.M2 }}>확인</Text>
           </TouchableOpacity>

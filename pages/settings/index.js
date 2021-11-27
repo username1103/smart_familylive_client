@@ -13,7 +13,7 @@ import stateful from '../../utils/stateful';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
 
 const Dumb = (p) => {
-  const { logout, goConnectionCode, goSettings, alarmStatus } = p;
+  const { logout, goConnectionCode, goSettings, alarmStatus, goFamilyInfo } = p;
   return (
     <SafeAreaPlatfrom
       backgroundColor={Colors.M1}
@@ -45,7 +45,7 @@ const Dumb = (p) => {
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={goConnectionCode}>
+            <TouchableOpacity onPress={goFamilyInfo}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -58,7 +58,7 @@ const Dumb = (p) => {
                   marginVertical: 5,
                 }}
               >
-                <Text style={{ fontSize: 20, color: 'black' }}>연결 코드</Text>
+                <Text style={{ fontSize: 20, color: 'black' }}>가족 정보</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={logout}>
@@ -92,8 +92,14 @@ const Logic = () => {
   const [alarmStatus, setAlarmStatus] = useState(null);
 
   const logout = async () => {
-    await deviceHook.removeDeviceToken();
-    await authHook.logout();
+    navigation.navigate(PageName.SelectModal, {
+      message: '로그아웃 하시겠습니까?',
+      onSuccess: async () => {
+        await deviceHook.removeDeviceToken();
+        await authHook.logout();
+      },
+      goBack: true,
+    });
   };
 
   const init = async () => {
@@ -109,18 +115,18 @@ const Logic = () => {
 
   useEffect(init, []);
 
-  const goConnectionCode = () => {
-    navigation.navigate(PageName.ConnectionCode);
-  };
-
   const goSettings = () => {
     Linking.openSettings();
   };
 
+  const goFamilyInfo = () => {
+    navigation.navigate(PageName.FamilyInfo);
+  };
+
   return {
     logout,
-    goConnectionCode,
     goSettings,
+    goFamilyInfo,
     alarmStatus: alarmStatus ? 'ON' : 'OFF',
   };
 };

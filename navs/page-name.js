@@ -9,7 +9,6 @@ export default {
   Main: 'main',
   Home: 'home',
   QuestionList: 'lists',
-  ReplyQuestion: 'reply-question',
   Question: 'question',
   Shop: 'shop',
   Settings: 'settings',
@@ -22,11 +21,11 @@ export default {
 
   NotMatch: 'not-match',
   InsertCode: 'insert-code',
-  ConnectionCode: 'connection-code',
 
   InitGroup: 'init-group',
   EditUser: 'edit-user',
   UserInfo: 'user-info',
+  FamilyInfo: 'family-info',
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
   SelectModal: 'select-modal',

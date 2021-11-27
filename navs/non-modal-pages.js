@@ -12,7 +12,6 @@ import BloodType from '../pages/bloodType';
 import Gender from '../pages/gender';
 import Birthday from '../pages/birthday';
 import Name from '../pages/name';
-import ConnectionCode from '../pages/connetion-code';
 import NotMatch from '../pages/not-match';
 import InsertCode from '../pages/insert-code';
 import ReplyQuestion from '../pages/reply-question';
@@ -20,6 +19,7 @@ import Question from '../pages/question';
 import EditUser from '../pages/edit-user';
 import GoAnswer from '../pages/goAnswer';
 import UserInfo from '../pages/user-info.js';
+import FamilyInfo from '../pages/familyinfo';
 
 const wrappedComps = {
   Entry: wrapper.commonWrap(Entry),
@@ -36,13 +36,12 @@ const wrappedComps = {
 
   NotMatch: wrapper.commonWrap(NotMatch),
   InsertCode: wrapper.commonWrap(InsertCode),
-  ConnectionCode: wrapper.commonWrap(ConnectionCode),
 
-  ReplyQuestion: wrapper.commonWrap(ReplyQuestion),
   Question: wrapper.commonWrap(Question),
   EditUser: wrapper.commonWrap(EditUser),
   GoAnswer: wrapper.commonWrap(GoAnswer),
   UserInfo: wrapper.commonWrap(UserInfo),
+  FamilyInfo: wrapper.commonWrap(FamilyInfo),
 };
 
 const NonModalPagesNav = createStackNavigator();
@@ -102,16 +101,12 @@ export default () => {
 
       <S name={PageName.NotMatch} component={wrappedComps.NotMatch} />
       <S name={PageName.InsertCode} component={wrappedComps.InsertCode} />
-      <S
-        name={PageName.ConnectionCode}
-        component={wrappedComps.ConnectionCode}
-      />
 
-      <S name={PageName.ReplyQuestion} component={wrappedComps.ReplyQuestion} />
       <S name={PageName.Question} component={wrappedComps.Question} />
       <S name={PageName.EditUser} component={wrappedComps.EditUser} />
       <S name={PageName.GoAnswer} component={wrappedComps.GoAnswer} />
       <S name={PageName.UserInfo} component={wrappedComps.UserInfo} />
+      <S name={PageName.FamilyInfo} component={wrappedComps.FamilyInfo} />
     </N>
   );
 };

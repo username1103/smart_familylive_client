@@ -81,7 +81,7 @@ const Dumb = (p) => {
             }}
           >
             <View style={{ flex: 0.2 }}>
-              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>이름</Text>
+              <Text style={{ fontSize: 17, fontWeight: '600' }}>이름</Text>
             </View>
 
             <View
@@ -110,7 +110,7 @@ const Dumb = (p) => {
             }}
           >
             <View style={{ flex: 0.2 }}>
-              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>메시지</Text>
+              <Text style={{ fontSize: 17, fontWeight: '600' }}>메시지</Text>
             </View>
 
             <View
@@ -139,7 +139,7 @@ const Dumb = (p) => {
             }}
           >
             <View style={{ flex: 0.2 }}>
-              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>성별</Text>
+              <Text style={{ fontSize: 17, fontWeight: '600' }}>성별</Text>
             </View>
 
             <View
@@ -168,7 +168,7 @@ const Dumb = (p) => {
             }}
           >
             <View style={{ flex: 0.2 }}>
-              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>혈액형</Text>
+              <Text style={{ fontSize: 17, fontWeight: '600' }}>혈액형</Text>
             </View>
 
             <View
@@ -202,7 +202,7 @@ const Dumb = (p) => {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ fontSize: 17, fontWeight: 'bold' }}>생일</Text>
+              <Text style={{ fontSize: 17, fontWeight: '600' }}>생일</Text>
             </View>
 
             <View
