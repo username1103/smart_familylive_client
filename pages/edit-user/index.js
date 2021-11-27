@@ -363,6 +363,12 @@ const Logic = (p) => {
   };
 
   const confirm = async () => {
+    if (name.trim() === '') {
+      return navigation.navigate(PageName.AlertModal, {
+        message: '이름은 비워둘 수 없어요',
+      });
+    }
+
     await userHook.update({
       userId: authHook.userId,
       name,
