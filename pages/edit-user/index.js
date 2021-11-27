@@ -7,7 +7,6 @@ import {
   Dimensions,
   Image,
   Platform,
-  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
@@ -32,6 +31,8 @@ const Dumb = (p) => {
     confirm,
     name,
     setName,
+    statusMessage,
+    setStatusMessage,
     gender,
     setGender,
     bloodType,
@@ -118,6 +119,7 @@ const Dumb = (p) => {
             marginVertical: 20,
             flexDirection: 'row',
             width: _width * 0.85,
+            alignItems: 'center',
           }}
         >
           <View style={{ flex: 0.2 }}>
@@ -144,6 +146,34 @@ const Dumb = (p) => {
             marginVertical: 20,
             flexDirection: 'row',
             width: _width * 0.85,
+            alignItems: 'center',
+          }}
+        >
+          <View style={{ flex: 0.2 }}>
+            <Text style={{ fontSize: 17 }}>메시지</Text>
+          </View>
+
+          <View
+            style={{
+              flex: 0.8,
+              marginLeft: 20,
+              borderBottomWidth: 1,
+              borderBottomColor: Colors.DISABLE,
+            }}
+          >
+            <TextInput
+              style={{ fontSize: 17 }}
+              value={statusMessage}
+              onChangeText={setStatusMessage}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            marginVertical: 20,
+            flexDirection: 'row',
+            width: _width * 0.85,
+            alignItems: 'center',
           }}
         >
           <View style={{ flex: 0.2 }}>
@@ -180,6 +210,7 @@ const Dumb = (p) => {
             marginVertical: 20,
             flexDirection: 'row',
             width: _width * 0.85,
+            alignItems: 'center',
           }}
         >
           <View style={{ flex: 0.2 }}>
@@ -216,6 +247,7 @@ const Dumb = (p) => {
             marginVertical: 20,
             flexDirection: 'row',
             width: _width * 0.85,
+            alignItems: 'center',
           }}
         >
           <View
@@ -295,6 +327,7 @@ const Logic = (p) => {
   const imageHook = useImage();
 
   const [name, setName] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
   const [gender, setGender] = useState('');
   const [bloodType, setBloodType] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -311,6 +344,7 @@ const Logic = (p) => {
   const init = async () => {
     setName(user.name);
     setGender(user.gender);
+    setStatusMessage(user.statusMessage);
     setBloodType(user.bloodType);
     setBirthday(user.birthday);
     setThumbnail(user.thumbnail);
@@ -329,6 +363,7 @@ const Logic = (p) => {
       bloodType,
       gender,
       birthday,
+      statusMessage,
     });
 
     if (thumbnail !== user.thumbnail) {
@@ -376,6 +411,8 @@ const Logic = (p) => {
     confirm,
     name,
     setName,
+    statusMessage,
+    setStatusMessage,
     gender,
     setGender,
     bloodType,

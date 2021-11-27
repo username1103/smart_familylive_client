@@ -29,7 +29,14 @@ export const UserProvider = ({ children }) => {
       return result.data;
     };
 
-    const update = async ({ userId, name, bloodType, gender, birthday }) => {
+    const update = async ({
+      userId,
+      name,
+      bloodType,
+      gender,
+      birthday,
+      statusMessage,
+    }) => {
       await authHook.authedAxios({
         method: 'put',
         url: `${addr}/v1/users/${userId}`,
@@ -38,6 +45,7 @@ export const UserProvider = ({ children }) => {
           bloodType,
           gender,
           birthday,
+          statusMessage,
         },
       });
     };

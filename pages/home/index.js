@@ -200,6 +200,7 @@ const Dumb = (p) => {
                       style={{
                         width: 50,
                         aspectRatio: 1,
+
                         borderRadius: 100,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
@@ -216,7 +217,6 @@ const Dumb = (p) => {
                         aspectRatio: 1,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: 5,
                         backgroundColor: Colors.M1,
                         borderRadius: 100,
                         borderWidth: 0.3,
