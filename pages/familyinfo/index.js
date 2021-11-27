@@ -16,7 +16,7 @@ import PageName from '../../navs/page-name';
 import { useGroup } from '../../hooks/group';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import CustomHeader from '../../components/custom-header';
 import moment from 'moment';
