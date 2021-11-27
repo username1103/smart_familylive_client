@@ -137,10 +137,10 @@ const Dumb = (p) => {
                         width: 60,
                         aspectRatio: 1,
                         backgroundColor: Colors.M1,
-                        borderRadius: 50,
+                        borderRadius: 100,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
-                        resizeMode: 'contain',
+                        resizeMode: 'cover',
                       }}
                       source={{
                         uri: data.myinfo.thumbnail,
@@ -155,7 +155,7 @@ const Dumb = (p) => {
                         justifyContent: 'center',
                         padding: 5,
                         backgroundColor: Colors.M1,
-                        borderRadius: 50,
+                        borderRadius: 100,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
                       }}
@@ -200,11 +200,10 @@ const Dumb = (p) => {
                       style={{
                         width: 50,
                         aspectRatio: 1,
-                        backgroundColor: Colors.M1,
-                        borderRadius: 50,
+                        borderRadius: 100,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
-                        resizeMode: 'contain',
+                        resizeMode: 'cover',
                       }}
                       source={{
                         uri: user.thumbnail,
@@ -219,7 +218,7 @@ const Dumb = (p) => {
                         justifyContent: 'center',
                         padding: 5,
                         backgroundColor: Colors.M1,
-                        borderRadius: 50,
+                        borderRadius: 100,
                         borderWidth: 0.3,
                         borderColor: Colors.DISABLE,
                       }}

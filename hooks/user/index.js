@@ -59,7 +59,17 @@ export const UserProvider = ({ children }) => {
       });
     };
 
-    return { get, update, getUserGroup, sendCode, click };
+    const updateImage = async ({ userId, thumbnail }) => {
+      await authHook.authedAxios({
+        method: 'put',
+        url: `${addr}/v1/users/${userId}/images`,
+        data: {
+          thumbnail,
+        },
+      });
+    };
+
+    return { get, update, getUserGroup, sendCode, click, updateImage };
   };
 
   const [state, setState] = useState(take());

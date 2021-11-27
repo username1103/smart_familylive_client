@@ -1,6 +1,16 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import Colors from '../../styles/colors';
+
+const HeaderHeight = () => {
+  if (Platform.OS === 'ios') {
+    return 44;
+  } else if (Platform.OS === 'android') {
+    return 56;
+  } else {
+    return 64;
+  }
+};
 
 export default ({
   headerTitle,
@@ -26,7 +36,7 @@ export default ({
   return (
     <View
       style={{
-        height: '5.5%',
+        height: HeaderHeight(),
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',

@@ -80,53 +80,48 @@ const Dumb = (p) => {
   }
 
   return (
-    <SafeAreaPlatfrom
-      backgroundColor={Colors.M1}
-      components={
-        <>
-          <CustomHeader
-            headerTitle="Question"
-            leftButton={true}
-            onLeftButton={goback}
-            leftButtonComponent={
-              <Ionicons name="arrow-back-outline" size={30} color={Colors.M3} />
-            }
-          />
+    <>
+      <CustomHeader
+        headerTitle="Question"
+        leftButton={true}
+        onLeftButton={goback}
+        leftButtonComponent={
+          <Ionicons name="arrow-back-outline" size={30} color={Colors.M3} />
+        }
+      />
 
-          <View style={styles.container}>
-            <View style={styles.question}>
-              <Text
-                style={styles.questionText}
-              >{`#${questionNum} ${question.contents}`}</Text>
-            </View>
-            <ScrollView style={{ flex: 1 }}>
-              {userAnswers.map((user, idx) => (
-                <View style={styles.elem}>
-                  <View style={styles.userInfo}>
-                    <Text style={styles.name}>{user.name}</Text>
-                  </View>
+      <View style={styles.container}>
+        <View style={styles.question}>
+          <Text
+            style={styles.questionText}
+          >{`#${questionNum} ${question.contents}`}</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          {userAnswers.map((user, idx) => (
+            <View style={styles.elem}>
+              <View style={styles.userInfo}>
+                <Text style={styles.name}>{user.name}</Text>
+              </View>
 
-                  <TouchableOpacity onPress={user.onPress} disabled={idx !== 0}>
-                    <View style={styles.answer}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          color: user.answer ? 'black' : 'gray',
-                        }}
-                      >
-                        {user.answer
-                          ? user.answer.contents
-                          : '아직 입력되지 않았어요'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+              <TouchableOpacity onPress={user.onPress} disabled={idx !== 0}>
+                <View style={styles.answer}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: user.answer ? 'black' : 'gray',
+                    }}
+                  >
+                    {user.answer
+                      ? user.answer.contents
+                      : '아직 입력되지 않았어요'}
+                  </Text>
                 </View>
-              ))}
-            </ScrollView>
-          </View>
-        </>
-      }
-    />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 };
 

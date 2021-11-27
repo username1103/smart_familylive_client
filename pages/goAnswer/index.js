@@ -21,53 +21,48 @@ const Dumb = (p) => {
   const { goBack, setUserAnswer, userAnswer, submit, question, questionNum } =
     p;
   return (
-    <SafeAreaPlatfrom
-      backgroundColor={colors.M1}
-      components={
-        <>
-          <CustomHeader
-            headerTitle="Answer"
-            leftButton={true}
-            onLeftButton={goBack}
-            leftButtonComponent={
-              <Ionicons name="arrow-back-outline" size={30} color={colors.M3} />
-            }
-          />
+    <>
+      <CustomHeader
+        headerTitle="Answer"
+        leftButton={true}
+        onLeftButton={goBack}
+        leftButtonComponent={
+          <Ionicons name="arrow-back-outline" size={30} color={colors.M3} />
+        }
+      />
 
-          <View style={styles.container}>
-            <View style={styles.question}>
-              <Text
-                style={{ fontSize: 16 }}
-              >{`#${questionNum} ${question.contents}`}</Text>
-            </View>
-            <TextInput
-              placeholder="답변을 작성해주세요."
-              onChangeText={setUserAnswer}
-              returnKeyType="done"
-              value={userAnswer}
-              multiline={true}
-              style={styles.answerInput}
-              textAlignVertical={'top'}
-            ></TextInput>
-            <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={submit}>
-              <View
-                style={{
-                  marginVertical: 10,
-                  paddingVertical: 15,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 15,
-                  borderColor: colors.M2,
-                  borderWidth: 1,
-                }}
-              >
-                <Text style={{ fontSize: 15 }}>완료</Text>
-              </View>
-            </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={styles.question}>
+          <Text
+            style={{ fontSize: 16 }}
+          >{`#${questionNum} ${question.contents}`}</Text>
+        </View>
+        <TextInput
+          placeholder="답변을 작성해주세요."
+          onChangeText={setUserAnswer}
+          returnKeyType="done"
+          value={userAnswer}
+          multiline={true}
+          style={styles.answerInput}
+          textAlignVertical={'top'}
+        ></TextInput>
+        <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={submit}>
+          <View
+            style={{
+              marginVertical: 10,
+              paddingVertical: 15,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 15,
+              borderColor: colors.M2,
+              borderWidth: 1,
+            }}
+          >
+            <Text style={{ fontSize: 15 }}>완료</Text>
           </View>
-        </>
-      }
-    />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
