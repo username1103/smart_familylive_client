@@ -88,6 +88,26 @@ export const GroupProvider = ({ children }) => {
       });
     };
 
+    const buyItem = async ({ groupId, itemId, userId }) => {
+      await authHook.authedAxios({
+        method: 'post',
+        url: `${addr}/v1/groups/${groupId}/items`,
+        data: {
+          itemId,
+          userId,
+        },
+      });
+    };
+
+    const getItems = async ({ groupId }) => {
+      const result = await authHook.authedAxios({
+        method: 'get',
+        url: `${addr}/v1/groups/${groupId}/items`,
+      });
+
+      return result.data;
+    };
+
     return {
       generateCode,
       get,
@@ -97,6 +117,8 @@ export const GroupProvider = ({ children }) => {
       getCustomQuestion,
       getGroupQuestion,
       replyQuestion,
+      buyItem,
+      getItems,
     };
   };
 

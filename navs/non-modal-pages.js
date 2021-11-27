@@ -14,7 +14,6 @@ import Birthday from '../pages/birthday';
 import Name from '../pages/name';
 import NotMatch from '../pages/not-match';
 import InsertCode from '../pages/insert-code';
-import ReplyQuestion from '../pages/reply-question';
 import Question from '../pages/question';
 import EditUser from '../pages/edit-user';
 import GoAnswer from '../pages/goAnswer';

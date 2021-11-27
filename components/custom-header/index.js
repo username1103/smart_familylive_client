@@ -12,7 +12,7 @@ const HeaderHeight = () => {
   }
 };
 
-export default ({
+export default function CustomHeader({
   headerTitle,
   leftButton = false,
   onLeftButton,
@@ -20,7 +20,7 @@ export default ({
   rightButton = false,
   onRightButton,
   rightButtonComponent = null,
-}) => {
+}) {
   let textMargin = {};
   if (leftButton && rightButton) {
     textMargin = {};
@@ -90,4 +90,4 @@ export default ({
       </View>
     </View>
   );
-};
+}

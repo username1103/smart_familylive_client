@@ -8,6 +8,7 @@ import { UserProvider } from './hooks/user/index.js';
 import { DeviceWrapper } from './hooks/device/index.js';
 import { GroupProvider } from './hooks/group/index.js';
 import { ImageProvider } from './hooks/image/index.js';
+import { ItmeProvider } from './hooks/item/index.js';
 
 moment.locale('ko');
 
@@ -17,13 +18,15 @@ export default function App() {
       <AuthProvider>
         <DeviceWrapper>
           <ImageProvider>
-            <UserProvider>
-              <GroupProvider>
-                <NavigationContainer>
-                  <Root />
-                </NavigationContainer>
-              </GroupProvider>
-            </UserProvider>
+            <ItmeProvider>
+              <UserProvider>
+                <GroupProvider>
+                  <NavigationContainer>
+                    <Root />
+                  </NavigationContainer>
+                </GroupProvider>
+              </UserProvider>
+            </ItmeProvider>
           </ImageProvider>
         </DeviceWrapper>
       </AuthProvider>
