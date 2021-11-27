@@ -13,7 +13,7 @@ import Colors from '../../styles/colors';
 import stateful from '../../utils/stateful';
 import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
 import CustomHeader from '../../components/custom-header';
@@ -38,6 +38,8 @@ const Dumb = (p) => {
     birthday,
     setBirthday,
     customSetBirthday,
+    thumbnail,
+    setThumbnail,
   } = p;
 
   return (
@@ -66,7 +68,46 @@ const Dumb = (p) => {
               justifyContent: 'center',
             }}
           >
-            <Text>프로필 수정</Text>
+            <View style={{ marginTop: 15 }}>
+              {thumbnail !== '' ? (
+                <Image
+                  style={{
+                    width: 50,
+                    aspectRatio: 1,
+                    backgroundColor: Colors.M1,
+                    borderRadius: 50,
+                    borderWidth: 0.3,
+                    borderColor: Colors.DISABLE,
+                    resizeMode: 'contain',
+                  }}
+                  source={{
+                    uri: thumbnail,
+                  }}
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 100,
+                    aspectRatio: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 5,
+                    borderRadius: 50,
+                    borderWidth: 0.3,
+                    borderColor: Colors.DISABLE,
+                  }}
+                >
+                  <SimpleLineIcons name="user" size={35} color="black" />
+                </View>
+              )}
+            </View>
+            <TouchableOpacity>
+              <Text
+                style={{ marginVertical: 15, color: Colors.M2, fontSize: 17 }}
+              >
+                프로필 사진 바꾸기
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -262,6 +303,7 @@ const Logic = (p) => {
   const [gender, setGender] = useState('');
   const [bloodType, setBloodType] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
 
   const [showDate, setShowDate] = useState(false);
 
@@ -276,6 +318,7 @@ const Logic = (p) => {
     setGender(user.gender);
     setBloodType(user.bloodType);
     setBirthday(user.birthday);
+    setThumbnail(user.thumbnail);
   };
 
   useEffect(init, []);
@@ -312,6 +355,8 @@ const Logic = (p) => {
     birthday,
     setBirthday,
     customSetBirthday,
+    thumbnail,
+    setThumbnail,
   };
 };
 
