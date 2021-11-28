@@ -27,8 +27,10 @@ export default {
   UserInfo: 'user-info',
   FamilyInfo: 'family-info',
   FamilyItem: 'family-item',
+
   TestModal: 'test-modal',
   AlertModal: 'alert-modal',
   SelectModal: 'select-modal',
   BottomSelectModal: 'bottom-select-modal',
+  CustomQuestionModal: 'custom-question-modal',
 };

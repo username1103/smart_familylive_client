@@ -9,6 +9,7 @@ import { InitGroup } from '../pages/initGroup';
 import { AlertModal } from '../pages/alert-modal';
 import { SelectModal } from '../pages/select-modal';
 import { BottomSelectModal } from '../pages/bottom-select-modal';
+import { CustomQuestionModal } from '../pages/custom-qusetion-modal';
 
 const RootNav = createStackNavigator();
 
@@ -20,6 +21,7 @@ const wrappedComps = {
   AlertModal: wrapper.modalWrap(AlertModal),
   SelectModal: wrapper.modalWrap(SelectModal),
   BottomSelectModal: wrapper.modalWrap(BottomSelectModal),
+  CustomQuestionModal: wrapper.modalWrap(CustomQuestionModal),
 };
 
 export default () => {
@@ -62,6 +64,10 @@ export default () => {
       <S
         name={PageName.BottomSelectModal}
         component={wrappedComps.BottomSelectModal}
+      />
+      <S
+        name={PageName.CustomQuestionModal}
+        component={wrappedComps.CustomQuestionModal}
       />
     </N>
   );

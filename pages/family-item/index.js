@@ -191,11 +191,13 @@ const Logic = () => {
       .map((item) => ({
         ...item,
         onPress: () => {
-          navigation.navigate(PageName.SelectModal, {
-            message: '사용하시겠습니까?',
-            onSuccess: () => {},
-            goBack: true,
-          });
+          if ((item.item.name = '직접 질문 작성하기')) {
+            navigation.navigate(PageName.CustomQuestionModal, {
+              item,
+            });
+          } else if ((item.item.name = '질문 시간 변경')) {
+            navigation.navigate(PageName.ChangeQuestionTime, { item });
+          }
         },
       }));
     setData({
