@@ -109,17 +109,14 @@ const Dumb = (p) => {
                   <Text
                     style={{
                       fontSize: 15,
-                      color: !user.answer
-                        ? 'gray'
-                        : data.isReplied
-                        ? '#000'
-                        : '#0000',
-                      ...user.style,
+                      color: !user.answer || !data.isReplied ? 'gray' : '#000',
                     }}
                   >
-                    {user.answer
+                    {!user.answer
+                      ? '아직 입력되지 않았어요'
+                      : data.isReplied
                       ? user.answer.contents
-                      : '아직 입력되지 않았어요'}
+                      : '자신의 답변을 작성해야 확인 가능합니다'}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -197,20 +194,6 @@ const Logic = (p) => {
       return {
         ...user,
         answer: userAnswer,
-        style:
-          userAnswer && !isReplied
-            ? {
-                textShadowColor: 'rgba(0,0,0,0.8)',
-                textShadowOffset: {
-                  width: 0,
-                  height: 0,
-                },
-                textShadowRadius: 40,
-
-                fontWeight: '600',
-                textTransform: 'capitalize',
-              }
-            : {},
         onPress: () => {},
       };
     });
