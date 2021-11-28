@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
 });
 
 const Dumb = (p) => {
-  const { userAnswers, question, questionNum, goback } = p;
+  const { data, question, questionNum, goback } = p;
 
-  if (userAnswers === null) {
+  if (data === null) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size={'large'} color={'black'} />
@@ -98,8 +98,8 @@ const Dumb = (p) => {
           >{`#${questionNum} ${question.contents}`}</Text>
         </View>
         <ScrollView style={{ flex: 1 }}>
-          {userAnswers.map((user, idx) => (
-            <View style={styles.elem}>
+          {data.userAnswers.map((user, idx) => (
+            <View style={styles.elem} key={user._id}>
               <View style={styles.userInfo}>
                 <Text style={styles.name}>{user.name}</Text>
               </View>
@@ -109,7 +109,12 @@ const Dumb = (p) => {
                   <Text
                     style={{
                       fontSize: 15,
-                      color: user.answer ? 'black' : 'gray',
+                      color: !user.answer
+                        ? 'gray'
+                        : data.isReplied
+                        ? '#000'
+                        : '#0000',
+                      ...user.style,
                     }}
                   >
                     {user.answer
@@ -135,7 +140,7 @@ const Logic = (p) => {
   const authHook = useAuth();
   const userHook = useUser();
 
-  const [userAnswers, setUserAnswers] = useState(null);
+  const [data, setData] = useState(null);
 
   const init = async () => {
     const { groupId } = await userHook.getUserGroup({
@@ -158,8 +163,7 @@ const Logic = (p) => {
       (user) => user._id !== authHook.userId
     );
 
-    const setOrderUsers = [...me, ...familyWithoutMe];
-    const userAnswers = setOrderUsers.map((user) => {
+    const myAnswer = me.map((user) => {
       const [userAnswer] = groupQuestioninfo.answers.filter(
         (answer) => answer.author === user._id
       );
@@ -183,18 +187,49 @@ const Logic = (p) => {
       };
     });
 
-    setUserAnswers(userAnswers);
+    const isReplied = myAnswer[0].answer ? true : false;
+
+    const familyAnswers = familyWithoutMe.map((user) => {
+      const [userAnswer] = groupQuestioninfo.answers.filter(
+        (answer) => answer.author === user._id
+      );
+
+      return {
+        ...user,
+        answer: userAnswer,
+        style:
+          userAnswer && !isReplied
+            ? {
+                textShadowColor: 'rgba(0,0,0,0.8)',
+                textShadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                textShadowRadius: 40,
+
+                fontWeight: '600',
+                textTransform: 'capitalize',
+              }
+            : {},
+        onPress: () => {},
+      };
+    });
+
+    setData({
+      userAnswers: [...myAnswer, ...familyAnswers],
+      isReplied,
+    });
   };
 
   const goback = () => {
     navigation.goBack();
   };
 
-  useRefreshOnFocus({ isInitialized: userAnswers !== null, refresh: init });
+  useRefreshOnFocus({ isInitialized: data !== null, refresh: init });
 
   useEffect(init, []);
 
-  return { userAnswers, question, questionNum, goback };
+  return { data, question, questionNum, goback };
 };
 
 let Question = stateful(Dumb, Logic);
