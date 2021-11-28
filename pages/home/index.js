@@ -202,6 +202,7 @@ const Dumb = (p) => {
                   borderBottomWidth: 0.3,
                   paddingVertical: 10,
                 }}
+                key={user._id}
               >
                 <TouchableOpacity
                   style={{
