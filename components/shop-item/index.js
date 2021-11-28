@@ -3,11 +3,18 @@ import { View, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 
 const width = Dimensions.get('window').width;
 
-export default function ShopItem({ image, name, price, onPress }) {
+export default function ShopItem({
+  image,
+  name,
+  price,
+  onPress,
+  disabled = false,
+}) {
   return (
     <TouchableOpacity
-      style={{ width: width * 0.3, height: 200 }}
+      style={{ width: width * 0.3, height: 200, margin: 3 }}
       onPress={onPress}
+      disabled={disabled}
     >
       <View
         style={{

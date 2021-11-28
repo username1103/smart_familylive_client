@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/colors';
 import { useRefreshOnFocus } from '../../utils/useRefreshOnFoucs';
@@ -18,70 +10,8 @@ import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { Ionicons } from '@expo/vector-icons';
 import CustomHeader from '../../components/custom-header';
-import { GridView } from '../../components/grid-view';
 import ShopItem from '../../components/shop-item';
-
-const width = Dimensions.get('window').width;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.M1,
-    marginHorizontal: 15,
-  },
-  title: {
-    width: '100%',
-    height: '20%',
-    justifyContent: 'center',
-    backgroundColor: Colors.M4,
-    borderRadius: 20,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 30,
-    backgroundColor: '#d6ca1a',
-  },
-  footer: {
-    width: '100%',
-    height: '18%',
-    backgroundColor: '#1ad657',
-  },
-  elem: {
-    height: '12%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderColor: '#f7bca8',
-    borderBottomWidth: 0.5,
-  },
-  userInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  userComment: {
-    padding: 5,
-    backgroundColor: Colors.M4,
-    borderRadius: 5,
-  },
-  profile: {
-    width: 50,
-    height: 50,
-  },
-  name: {
-    fontSize: 16,
-    paddingLeft: 10,
-  },
-  answer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  answerText: {
-    fontSize: 15,
-  },
-});
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Dumb = (p) => {
   const { data, goBack } = p;
@@ -124,10 +54,21 @@ const Dumb = (p) => {
       <View style={{ paddingLeft: 20 }}>
         <Text style={{ fontSize: 17, fontWeight: '600' }}>사용 전</Text>
       </View>
-      <View style={{ flex: 1, justifyContent: 'flex-start', marginTop: 20 }}>
-        <GridView
-          data={data.notUsedItems}
-          renderItem={(item) => (
+      <ScrollView
+        style={{
+          flex: 1,
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            marginHorizontal: 10,
+          }}
+        >
+          {data.notUsedItems.map((item) => (
             <ShopItem
               key={item._id}
               image={item.item.image}
@@ -135,35 +76,41 @@ const Dumb = (p) => {
               price={item.item.price}
               onPress={item.onPress}
             />
-          )}
-          numColumns={3}
-        />
-      </View>
+          ))}
+        </View>
+      </ScrollView>
+
+      <View style={{ borderWidth: 1, borderColor: Colors.DISABLE }}></View>
+
       <View
         style={{
           paddingLeft: 20,
-          paddingTop: 10,
-          borderTopColor: Colors.DISABLE,
-          borderTopWidth: 1,
         }}
       >
         <Text style={{ fontSize: 17, fontWeight: '600' }}>사용 완료</Text>
       </View>
-      <View style={{ flex: 1, justifyContent: 'flex-start', marginTop: 20 }}>
-        <GridView
-          data={data.usedItems}
-          renderItem={(item) => (
+      <ScrollView style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            marginHorizontal: 10,
+          }}
+        >
+          {data.usedItems.map((item) => (
             <ShopItem
               key={item._id}
               image={item.item.image}
               name={item.item.name}
               price={item.item.price}
-              onPress={() => {}}
+              onPress={item.onPress}
+              disabled={true}
             />
-          )}
-          numColumns={3}
-        />
-      </View>
+          ))}
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -191,12 +138,15 @@ const Logic = () => {
       .map((item) => ({
         ...item,
         onPress: () => {
-          if ((item.item.name = '직접 질문 작성하기')) {
+          if (item.item.name === '직접 질문 작성하기') {
             navigation.navigate(PageName.CustomQuestionModal, {
               item,
             });
-          } else if ((item.item.name = '질문 시간 변경')) {
-            navigation.navigate(PageName.ChangeQuestionTime, { item });
+          } else if (item.item.name === '질문 시간 변경') {
+            navigation.navigate(PageName.ChangeQuestionTimeModal, {
+              item,
+              currentTime: groupinfo.questionTime,
+            });
           }
         },
       }));

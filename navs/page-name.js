@@ -33,4 +33,5 @@ export default {
   SelectModal: 'select-modal',
   BottomSelectModal: 'bottom-select-modal',
   CustomQuestionModal: 'custom-question-modal',
+  ChangeQuestionTimeModal: 'change-questiontime-modal',
 };

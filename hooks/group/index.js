@@ -125,6 +125,17 @@ export const GroupProvider = ({ children }) => {
       });
     };
 
+    const updateGroupQuestionTime = async ({ groupId, time, groupItemId }) => {
+      await authHook.authedAxios({
+        method: 'put',
+        url: `${addr}/v1/groups/${groupId}/time`,
+        data: {
+          time,
+          groupItemId,
+        },
+      });
+    };
+
     return {
       generateCode,
       get,
@@ -137,6 +148,7 @@ export const GroupProvider = ({ children }) => {
       buyItem,
       getItems,
       createCustomQuestion,
+      updateGroupQuestionTime,
     };
   };
 

@@ -3,9 +3,9 @@ import {
   Image,
   Text,
   View,
-  Dimensions,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from 'react-native';
 import CustomHeader from '../../components/custom-header';
 import SafeAreaPlatfrom from '../../components/safe-area-platfrom';
@@ -18,11 +18,8 @@ import { useAuth } from '../../hooks/auth';
 import { useUser } from '../../hooks/user';
 import { useGroup } from '../../hooks/group';
 import { useItem } from '../../hooks/item';
-import { GridView } from '../../components/grid-view';
 import { useNavigation } from '@react-navigation/native';
 import pageName from '../../navs/page-name';
-
-const width = Dimensions.get('window').width;
 
 const Dumb = (p) => {
   const { data, goFamilyItem } = p;
@@ -67,12 +64,21 @@ const Dumb = (p) => {
               </View>
             }
           />
-          <View
-            style={{ flex: 1, justifyContent: 'flex-start', marginTop: 20 }}
+          <ScrollView
+            style={{
+              flex: 1,
+            }}
           >
-            <GridView
-              data={data.items}
-              renderItem={(item) => (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'flex-start',
+                marginHorizontal: 10,
+              }}
+            >
+              {data.items.map((item) => (
                 <ShopItem
                   key={item._id}
                   image={item.image}
@@ -80,10 +86,9 @@ const Dumb = (p) => {
                   price={item.price}
                   onPress={item.onPress}
                 />
-              )}
-              numColumns={3}
-            />
-          </View>
+              ))}
+            </View>
+          </ScrollView>
         </>
       }
     />
