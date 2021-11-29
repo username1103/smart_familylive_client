@@ -30,6 +30,7 @@ const ensure = async ({ addr, authedAxios, userId, setDeviceToken }) => {
   {
     const expoTokenData = await Notifications.getExpoPushTokenAsync();
     expoToken = expoTokenData.data;
+    console.log(expoToken);
     setDeviceToken(expoToken);
   }
 
@@ -72,14 +73,14 @@ export const DeviceWrapper = ({ children }) => {
   const addr = useAddr();
   const authHook = useAuth();
   const [deviceToken, setDeviceToken] = useState('');
-
+  console.log(deviceToken);
   let userId;
   if (authHook.status === 'authed') {
     userId = authHook.userId;
   }
 
   useEffect(async () => {
-    if (authHook.status === 'authed') {
+    if (authHook.status === 'authed' && deviceToken === '') {
       await ensure({
         addr,
         authedAxios: authHook.authedAxios,
@@ -105,6 +106,7 @@ export const DeviceWrapper = ({ children }) => {
           url: `${addr}/v1/devices`,
           params: { user: userId, deviceToken },
         });
+        setDeviceToken('');
       }
     };
 
