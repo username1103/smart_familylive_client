@@ -138,7 +138,7 @@ const Logic = () => {
             navigation.navigate(PageName.Question, {
               groupQuestion: question,
               question: data,
-              questionNum: idx + 1,
+              questionNum: validQuestions.length - idx,
             }),
         });
       }, Promise.resolve());
